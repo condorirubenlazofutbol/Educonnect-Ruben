@@ -23,6 +23,7 @@ def startup_event():
         cur = conn.cursor()
         cur.execute("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS carnet VARCHAR(50)")
         cur.execute("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS nivel_asignado VARCHAR(100)")
+        cur.execute("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS estado VARCHAR(20) DEFAULT 'activo'")
         cur.execute("ALTER TABLE modulos ADD COLUMN IF NOT EXISTS subnivel VARCHAR(100)")
         cur.execute("ALTER TABLE modulos ADD COLUMN IF NOT EXISTS orden INT DEFAULT 0")
         cur.execute("ALTER TABLE contenidos ADD COLUMN IF NOT EXISTS tema_num INT DEFAULT 1")
