@@ -83,24 +83,29 @@ def register_profesor(nombre: str, apellido: str, carnet: str, nivel_asignado: s
         raise HTTPException(status_code=500, detail="Error de base de datos")
     try:
         cur = conn.cursor()
-        # Generar email limpio: juan.perez@educonnect.com
         clean_n = nombre.strip().split(' ')[0].lower()
         clean_a = apellido.strip().split(' ')[0].lower()
         email = f"{clean_n}.{clean_a}@educonnect.com"
-        
         hashed = auth.get_password_hash(str(carnet).strip())
-        
-        cur.execute(
-            "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado, carnet) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-            (nombre.strip(), apellido.strip(), email, hashed, "profesor", nivel_asignado, str(carnet).strip())
-        )
+        try:
+            cur.execute(
+                "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado, carnet) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                (nombre.strip(), apellido.strip(), email, hashed, "profesor", nivel_asignado, str(carnet).strip())
+            )
+        except Exception:
+            conn.rollback()
+            cur.execute(
+                "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                (nombre.strip(), apellido.strip(), email, hashed, "profesor", nivel_asignado)
+            )
         new_id = cur.fetchone()[0]
         conn.commit()
-        cur.close(); conn.close()
         return {"id": new_id, "email": email, "mensaje": f"Profesor {nombre} creado"}
     except psycopg2.errors.UniqueViolation:
+        conn.rollback()
         raise HTTPException(status_code=400, detail="El email ya está registrado")
     except Exception as e:
+        conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
@@ -116,18 +121,25 @@ def register_estudiante(data: RegistroEstudiante):
         clean_a = data.apellido.strip().split(' ')[0].lower()
         email = f"{clean_n}.{clean_a}@educonnect.com"
         hashed = auth.get_password_hash(str(data.carnet).strip())
-
-        cur.execute(
-            "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado, carnet) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-            (data.nombre.strip(), data.apellido.strip(), email, hashed, "estudiante", data.nivel_asignado, str(data.carnet).strip())
-        )
+        try:
+            cur.execute(
+                "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado, carnet) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                (data.nombre.strip(), data.apellido.strip(), email, hashed, "estudiante", data.nivel_asignado, str(data.carnet).strip())
+            )
+        except Exception:
+            conn.rollback()
+            cur.execute(
+                "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                (data.nombre.strip(), data.apellido.strip(), email, hashed, "estudiante", data.nivel_asignado)
+            )
         new_id = cur.fetchone()[0]
         conn.commit()
         return {"id": new_id, "email": email, "mensaje": f"Estudiante {data.nombre} inscrito"}
     except psycopg2.errors.UniqueViolation:
         conn.rollback()
-        raise HTTPException(status_code=400, detail="El email ya existe")
+        raise HTTPException(status_code=400, detail="El email ya existe. Verifica el carnet.")
     except Exception as e:
+        conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cur.close(); conn.close()
