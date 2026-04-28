@@ -1,6 +1,6 @@
-# 🎓 EduConnect Ruben – Plataforma Educativa Pro
+# 🎓 EduConnect Ruben – Plataforma Educativa Pro & Escalable
 
-> Sistema de gestión académica completo con roles de Administrador, Profesor y Estudiante. Desplegado en Railway con base de datos PostgreSQL.
+> Sistema LMS (Learning Management System) de alto rendimiento, diseñado para la escalabilidad académica. Incluye roles de Administrador, Profesor y Estudiante con una arquitectura moderna PWA.
 
 ---
 
@@ -8,33 +8,47 @@
 
 | Recurso | URL |
 |---|---|
-| **Frontend** | https://condorirubenlazofutbol.github.io/Educonnect-Ruben/ |
-| **Backend API** | https://educonnect-backend-production-1d08.up.railway.app |
-| **Docs API** | https://educonnect-backend-production-1d08.up.railway.app/docs |
-| **Cargar Datos** | https://educonnect-backend-production-1d08.up.railway.app/cargar-datos |
+| **Plataforma Web** | [https://condorirubenlazofutbol.github.io/Educonnect-Ruben/](https://condorirubenlazofutbol.github.io/Educonnect-Ruben/) |
+| **Página de Acceso** | [https://condorirubenlazofutbol.github.io/Educonnect-Ruben/login.html](https://condorirubenlazofutbol.github.io/Educonnect-Ruben/login.html) |
+| **Backend API** | [https://educonnect-backend-production-1d08.up.railway.app](https://educonnect-backend-production-1d08.up.railway.app) |
+| **Documentación API** | [/docs](https://educonnect-backend-production-1d08.up.railway.app/docs) |
 
 ---
 
-## 🏗️ Arquitectura
+## 🚀 Características de Escalabilidad y Potencia
+
+### 📱 PWA (Progressive Web App)
+La plataforma es **instalable** en dispositivos Android, iOS y Windows/Mac. Funciona como una aplicación nativa, con icono en el escritorio y carga optimizada, garantizando acceso rápido para los estudiantes desde cualquier lugar.
+
+### 🛡️ Administración Avanzada y Control Total
+Diseñado para gestionar grandes volúmenes de usuarios:
+- **Buscador Inteligente:** Filtra miles de alumnos por **Número de Carnet** o Nombre en milisegundos.
+- **Control de Pagos (Pausar/Reanudar):** Suspensión inmediata del acceso para alumnos en mora sin borrar sus datos ni progreso.
+- **Gestión Masiva:** Carga de semestres completos mediante archivos Excel (.xlsx).
+- **Seguridad Pro:** Reseteo de contraseñas por carnet y cambio de credenciales de administrador integrado.
+
+### 👨‍🏫 Gestión de Contenidos Dinámicos
+- **Malla Curricular Robusta:** Estructura escalable de 10 Semestres (Básico hasta Ingeniería).
+- **Materiales Ilimitados:** Los profesores pueden añadir materiales extra dinámicos (PDF, Video, PPT, Audio) más allá de la malla base.
+
+### 🌐 Optimización SEO y Social Media
+Configurado con **Open Graph**, permitiendo que al compartir el enlace en WhatsApp o redes sociales, aparezca la marca oficial y una vista previa profesional.
+
+---
+
+## 🏗️ Arquitectura Técnica
 
 ```
 Educonnect-Ruben/
-├── backend/                  # FastAPI + PostgreSQL
-│   ├── main.py               # Entry point + CORS + rutas
-│   ├── database.py           # Conexión PostgreSQL
-│   ├── security.py           # JWT + bcrypt
-│   ├── seed_modulos.py       # Carga malla curricular completa
-│   └── routes/
-│       ├── auth.py           # Login, registro, usuarios
-│       ├── modulos.py        # Módulos y contenidos
-│       └── evaluaciones.py   # Evaluaciones
-├── frontend/
-│   ├── index.html            # Página pública (malla curricular)
-│   ├── login.html            # Login universal
-│   ├── js/api.js             # Configuración API
-│   ├── admin/dashboard.html  # Panel Administrador
-│   ├── profesor/dashboard.html # Panel Profesor
-│   └── student/dashboard.html  # Panel Estudiante
+├── backend/                  # FastAPI (Python 3.11) + PostgreSQL
+│   ├── main.py               # Migraciones automáticas y Startup
+│   ├── database.py           # Gestión de Pool de conexiones
+│   └── routes/               # Lógica de negocio modularizada
+├── frontend/                 # Frontend ligero (Vanilla JS / HTML5 / CSS3)
+│   ├── instalar/             # Recursos PWA (Service Worker, Manifest, Iconos)
+│   ├── admin/                # Panel de Control Administrativo
+│   ├── profesor/             # Gestión de Módulos y Materiales
+│   └── student/              # Interfaz de Aprendizaje
 └── requirements.txt
 ```
 
@@ -42,134 +56,38 @@ Educonnect-Ruben/
 
 ## 👥 Roles del Sistema
 
-### 🔑 Administrador
-- Registra profesores y estudiantes (manual o Excel masivo)
-- Asigna niveles y semestres
-- Ve estadísticas generales: total inscritos, por nivel
-- Elimina usuarios
-
-### 👨‍🏫 Profesor
-- Ve sus módulos asignados por semestre
-- Publica materiales por Tema (5 temas × 5 tipos):
-  - 📄 Teoría | 📊 PPT | 🎥 Video | 🎵 Audio | 📝 Evaluación
-- Puede pegar links externos o adjuntar archivos
-
-### 🎓 Estudiante
-- Accede a su nivel/semestre asignado
-- Navega por semestres con pestañas
-- Abre cada módulo y ve el material de cada tema
+| Rol | Capacidades |
+|---|---|
+| **Administrador** | Control total de usuarios, reportes académicos, carga masiva, búsqueda por CI y suspensión de acceso. |
+| **Profesor** | Gestión de sus módulos asignados, publicación de materiales extra y seguimiento de temas. |
+| **Estudiante** | Acceso a contenidos por niveles, navegación por pestañas de semestres y consumo de materiales. |
 
 ---
 
-## 📐 Malla Curricular (10 Semestres)
-
-| Nivel | Semestres |
-|---|---|
-| 🔰 Básico | 1er Semestre |
-| ⚙️ Auxiliar | 2do Semestre |
-| 📚 Medio | 3ro y 4to Semestre |
-| 🚀 Superior | 5to y 6to Semestre |
-| 🏗️ Ingeniería | 7mo, 8vo, 9no y 10mo Semestre |
-
-- **5 Módulos** por semestre
-- **5 Temas** por módulo
-- **5 Tipos de material** por tema
-
----
-
-## 🔐 Sistema de Acceso
-
-| Dato | Valor |
-|---|---|
-| **Email** | `nombre.apellido@educonnect.com` (generado automáticamente) |
-| **Contraseña inicial** | Número de Carnet del usuario |
-| **Carga masiva** | Excel (.xlsx) con columnas: Nombre, Apellido, Carnet |
+## 📐 Capacidad de la Malla
+- **10 Semestres** (Básico, Auxiliar, Medio, Superior, Ingeniería).
+- **5 Módulos** estándar por semestre.
+- **4 Temas** estructurados por módulo (Optimizados para UX).
+- **Tipos de material:** Teoría (PDF), PPT, Video, Audio y Evaluación.
 
 ---
 
 ## 🚀 Stack Tecnológico
 
-| Capa | Tecnología |
-|---|---|
-| **Backend** | Python 3.11 + FastAPI |
-| **Base de Datos** | PostgreSQL (Railway) |
-| **Autenticación** | JWT + bcrypt |
-| **Frontend** | HTML5 + CSS3 + JavaScript Vanilla |
-| **Deploy** | Railway (backend) + GitHub Pages (frontend) |
-| **Excel** | openpyxl |
+| Capa | Tecnología | Razón de uso |
+|---|---|---|
+| **Backend** | FastAPI | Velocidad asíncrona y escalabilidad horizontal. |
+| **Base de Datos** | PostgreSQL | Robustez relacional y seguridad de datos. |
+| **Frontend** | Vanilla JS | Carga instantánea sin dependencias pesadas. |
+| **Infraestructura** | Railway | Despliegue continuo (CI/CD) automático. |
+| **Seguridad** | JWT + bcrypt | Estándar de la industria para sesiones seguras. |
 
 ---
 
-## ⚙️ Variables de Entorno (Railway)
+## 👨‍💻 Equipo y Desarrollo
 
-```env
-DATABASE_URL=postgresql://...
-SECRET_KEY=tu_clave_secreta
-ALGORITHM=HS256
-```
+- **Líder de Proyecto:** Ruben Lazo
+- **Soporte de Ingeniería:** Antigravity AI (Google DeepMind)
 
 ---
-
-## 📦 Instalación Local
-
-```bash
-# 1. Clonar repositorio
-git clone https://github.com/condorirubenlazofutbol/Educonnect-Ruben.git
-cd Educonnect-Ruben
-
-# 2. Instalar dependencias
-pip install -r requirements.txt
-
-# 3. Configurar variables de entorno
-cp .env.example .env  # Editar con tus datos
-
-# 4. Iniciar servidor
-cd backend
-uvicorn main:app --reload
-
-# 5. Cargar malla curricular
-python seed_modulos.py
-```
-
----
-
-## 🔄 Endpoints Principales
-
-```
-POST   /auth/login                    → Login (devuelve JWT)
-POST   /auth/register-profesor        → Crear profesor
-POST   /auth/register-estudiante      → Inscribir estudiante
-POST   /auth/bulk-register            → Carga masiva Excel
-GET    /auth/profesores               → Lista profesores
-GET    /auth/estudiantes              → Lista estudiantes
-DELETE /auth/usuarios/{id}            → Eliminar usuario
-
-GET    /modulos/                      → Listar módulos
-GET    /modulos/{id}/contenidos       → Ver materiales de un módulo
-POST   /modulos/contenido             → Publicar material (profesor)
-
-GET    /cargar-datos                  → Inicializar/resetear malla
-```
-
----
-
-## 📈 Próximas Mejoras Sugeridas
-
-- [ ] Sistema de calificaciones y notas
-- [ ] Cambio de contraseña desde el panel del usuario
-- [ ] Notificaciones de nuevo material
-- [ ] Foro o chat por módulo
-- [ ] App móvil nativa (React Native)
-- [ ] Reporte de progreso del estudiante en PDF
-- [ ] Autenticación con Google
-
----
-
-## 👨‍💻 Desarrollado por
-
-**Ruben Lazo** – EduConnect Ruben  
-Potenciado por **Antigravity AI**
-
----
-
-*Versión 16.0 – Abril 2026*
+*EduConnect Ruben v20.0 – "Educación sin límites, tecnología sin fronteras"*
