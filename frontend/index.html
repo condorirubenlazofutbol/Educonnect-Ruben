@@ -94,8 +94,18 @@ footer{position:relative;z-index:1;text-align:center;padding:1.5rem;border-top:1
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .lvl-block{animation:fadeIn .4s ease both}
+#toast.show{transform:translateY(0);opacity:1}
 
-@media(max-width:640px){.hero h1{font-size:2rem}.btn-cta{width:100%;text-align:center}}
+@media(max-width:640px){
+  nav{padding:0.8rem 1rem}
+  .logo-img{height:48px}
+  .hero{padding:3rem 1rem 2rem}
+  .hero h1{font-size:1.8rem}
+  .hero p{font-size:0.9rem}
+  .lvl-header{flex-direction:column;align-items:flex-start;gap:0.5rem;padding:1.2rem}
+  .lvl-badge{margin-left:0;margin-top:0.3rem}
+  .btn-cta{width:100%;text-align:center}
+}
 </style>
 </head>
 <body>

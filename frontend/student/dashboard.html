@@ -58,6 +58,17 @@ input{background:rgba(255,255,255,.06);border:1px solid var(--b);border-radius:8
 
 #toast{position:fixed;bottom:2rem;right:2rem;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:.85rem 1.4rem;font-size:.85rem;font-weight:600;z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;pointer-events:none}
 #toast.show{transform:translateY(0);opacity:1}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){
+  header{padding:0.8rem 1rem}
+  .logo-img{height:48px}
+  .hero{padding:2rem 1rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .levels-grid{grid-template-columns:1fr;gap:0.8rem;padding:0 1rem}
+  .lvl-card{padding:1.4rem 1.2rem}
+  .content-area{padding:0 1rem 3rem}
+  .sem-tab{padding:0.4rem 1rem;font-size:0.75rem}
+}
 </style>
 </head>
 <body>

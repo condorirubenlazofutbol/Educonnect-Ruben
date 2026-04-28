@@ -59,6 +59,18 @@ header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify
 
 #toast{position:fixed;bottom:2rem;right:2rem;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:.85rem 1.4rem;font-size:.85rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s}
 #toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:640px){
+  header{padding:0.8rem 1rem}
+  .logo-img{height:48px}
+  .hero{padding:2rem 1rem 1rem}
+  .hero h1{font-size:1.4rem}
+  .wrap{padding:1.5rem 1rem}
+  .mod-header{padding:1rem}
+  .mod-name{font-size:0.95rem}
+  .materials-grid{grid-template-columns:1fr}
+  .topic-header{font-size:0.9rem}
+}
 </style>
 </head>
 <body>
