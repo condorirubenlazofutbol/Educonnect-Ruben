@@ -7,6 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+/* MODAL CREDENCIALES */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal-box{background:#131929;border:1.5px solid rgba(56,189,248,.4);border-radius:20px;padding:2rem;max-width:420px;width:100%;text-align:center}
+.modal-box h3{font-size:1.1rem;font-weight:900;color:#38bdf8;margin-bottom:.5rem}
+.cred-row{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:.8rem 1rem;margin:.8rem 0;text-align:left}
+.cred-label{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:.2rem}
+.cred-value{font-size:.95rem;font-weight:800;color:#e8eaf0;word-break:break-all}
+.btn-copy{background:none;border:1px solid rgba(56,189,248,.3);color:#38bdf8;padding:.2rem .7rem;border-radius:8px;cursor:pointer;font-size:.65rem;font-weight:700;margin-left:.5rem}
+.btn-modal-close{background:#0ea5e9;color:#fff;border:none;padding:.7rem 2rem;border-radius:10px;font-weight:800;cursor:pointer;margin-top:1rem;width:100%}
 :root{--a:#0ea5e9;--a2:#38bdf8;--dark:#0b0f1a;--card:#131929;--card2:#1a2338;--b:rgba(255,255,255,.08);--t:#e8eaf0;--m:rgba(255,255,255,.45);--cel:rgba(56,189,248,.13)}
 body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--t);min-height:100vh;overflow-x:hidden}
 
@@ -317,7 +328,7 @@ function setupForms() {
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.detail || 'Error al registrar');
-      toast('✅ Profesor creado – Email: ' + d.email);
+      showCreds(d.email, c, n + ' ' + a);
       e.target.reset();
       await loadProfesores(); renderResumen();
     } catch(err) { showErr(err.message); }
@@ -340,7 +351,7 @@ function setupForms() {
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.detail || 'Error al inscribir');
-      toast('✅ Estudiante inscrito – Email: ' + d.email);
+      showCreds(d.email, body.carnet, body.nombre + ' ' + body.apellido);
       e.target.reset();
       await loadEstudiantes(); renderResumen();
     } catch(err) { showErr(err.message); }
@@ -387,6 +398,43 @@ function showErr(msg) {
   el.textContent = '⚠️ ' + msg; el.style.display = 'block';
   setTimeout(() => el.style.display = 'none', 5000);
 }
+function showCreds(email, carnet, nombre) {
+  document.getElementById('cred-nombre').textContent = nombre;
+  document.getElementById('cred-email').textContent = email;
+  document.getElementById('cred-pass').textContent = carnet;
+  document.getElementById('modal-creds').classList.add('open');
+}
+function closeCreds() {
+  document.getElementById('modal-creds').classList.remove('open');
+}
+function copiar(id) {
+  const txt = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(txt).then(() => toast('📋 Copiado'));
+}
 </script>
-</body>
-</html>
+
+<!-- MODAL CREDENCIALES -->
+<div class="modal-overlay" id="modal-creds" onclick="if(event.target===this)closeCreds()">
+  <div class="modal-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🎉</div>
+    <h3>Usuario Creado</h3>
+    <p style="font-size:.75rem;color:rgba(255,255,255,.45);margin-bottom:.5rem">Guarda estas credenciales</p>
+    <div style="font-size:.8rem;font-weight:700;color:#e8eaf0;margin-bottom:.5rem" id="cred-nombre"></div>
+    <div class="cred-row">
+      <div class="cred-label">📧 Email de acceso</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="cred-value" id="cred-email"></div>
+        <button class="btn-copy" onclick="copiar('cred-email')">Copiar</button>
+      </div>
+    </div>
+    <div class="cred-row">
+      <div class="cred-label">🔑 Contraseña inicial (= Carnet)</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="cred-value" id="cred-pass"></div>
+        <button class="btn-copy" onclick="copiar('cred-pass')">Copiar</button>
+      </div>
+    </div>
+    <p style="font-size:.65rem;color:rgba(255,255,255,.35);margin-top:.5rem">El usuario puede cambiar su contraseña desde su panel</p>
+    <button class="btn-modal-close" onclick="closeCreds()">✅ Entendido</button>
+  </div>
+</div>

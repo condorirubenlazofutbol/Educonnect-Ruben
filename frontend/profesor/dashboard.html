@@ -62,6 +62,17 @@ input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--b);bord
   <div style="text-align:center;color:var(--m)">Cargando módulos...</div>
 </div>
 
+<!-- CAMBIO DE CONTRASEÑA -->
+<div class="wrap">
+  <div style="background:#131929;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.2rem;margin-top:.5rem">
+    <div style="font-size:.8rem;font-weight:800;color:#38bdf8;margin-bottom:.8rem">🔑 Cambiar Contraseña</div>
+    <input type="password" id="new-pass" placeholder="Nueva contraseña" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.6rem;color:#e8eaf0;font-size:.82rem;margin-bottom:.6rem">
+    <input type="password" id="new-pass2" placeholder="Repetir contraseña" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.6rem;color:#e8eaf0;font-size:.82rem;margin-bottom:.6rem">
+    <button onclick="cambiarPass()" style="width:100%;background:#0ea5e9;color:#fff;border:none;padding:.7rem;border-radius:8px;font-weight:800;cursor:pointer">Actualizar Contraseña</button>
+    <div id="pass-msg" style="font-size:.72rem;margin-top:.5rem;text-align:center"></div>
+  </div>
+</div>
+
 <div id="toast">✅ Guardado correctamente</div>
 
 <script>
@@ -143,6 +154,26 @@ async function saveMat(modId, t, tipo) {
     toast.style.display = 'block';
     setTimeout(() => toast.style.display = 'none', 2000);
   }
+}
+
+async function cambiarPass() {
+  const p1 = document.getElementById('new-pass').value;
+  const p2 = document.getElementById('new-pass2').value;
+  const msg = document.getElementById('pass-msg');
+  if (!p1 || p1.length < 4) { msg.style.color='#f87171'; msg.textContent='Mínimo 4 caracteres'; return; }
+  if (p1 !== p2) { msg.style.color='#f87171'; msg.textContent='Las contraseñas no coinciden'; return; }
+  try {
+    const r = await fetch(API_URL + '/auth/update-password', {
+      method: 'PUT',
+      headers: { Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ new_password: p1 })
+    });
+    if (r.ok) {
+      msg.style.color='#48d18e'; msg.textContent='✅ Contraseña actualizada';
+      document.getElementById('new-pass').value='';
+      document.getElementById('new-pass2').value='';
+    } else { msg.style.color='#f87171'; msg.textContent='Error al actualizar'; }
+  } catch { msg.style.color='#f87171'; msg.textContent='Error de conexión'; }
 }
 </script>
 </body>
