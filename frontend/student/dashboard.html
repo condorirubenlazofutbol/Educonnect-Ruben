@@ -8,26 +8,26 @@
 <script src="../js/api.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--a:#6c63ff;--a2:#48d18e;--red:#ef4444;--dark:#0b0f1a;--card:#131929;--card2:#1a2338;--b:rgba(255,255,255,.07);--t:#e8eaf0;--m:rgba(255,255,255,.45)}
+:root{--a:#0ea5e9;--a2:#38bdf8;--dark:#0b0f1a;--card:#131929;--card2:#1a2338;--b:rgba(255,255,255,.07);--t:#e8eaf0;--m:rgba(255,255,255,.45);--celeste:rgba(56, 189, 248, 0.15)}
 body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--t);min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 15% 15%,rgba(108,99,255,.15) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(72,209,142,.1) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 15% 15%,rgba(14,165,233,.12) 0%,transparent 70%);pointer-events:none;z-index:0}
 
 header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;border-bottom:1px solid var(--b);backdrop-filter:blur(14px);background:rgba(11,15,26,.85)}
 .logo-img{height:54px;object-fit:contain}
 .user-bar{display:flex;align-items:center;gap:.75rem}
 .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:grid;place-items:center;font-weight:800;font-size:.9rem}
-.btn-out{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.3);padding:.4rem 1rem;border-radius:20px;cursor:pointer;font-weight:700;font-size:.75rem}
+.btn-out{background:rgba(56,189,248,.1);color:var(--a2);border:1px solid rgba(56,189,248,.3);padding:.4rem 1rem;border-radius:20px;cursor:pointer;font-weight:700;font-size:.75rem}
 
 .hero{position:relative;z-index:1;text-align:center;padding:3rem 1rem 2rem}
 .hero h1{font-size:2rem;font-weight:900;margin-bottom:.5rem}
-.lvl-tag{display:inline-block;padding:.4rem 1.2rem;background:rgba(239, 68, 68, 0.15);border:2px solid rgba(239, 68, 68, 0.3);border-radius:20px;color:#ff8080;font-weight:800;font-size:.85rem}
+.lvl-tag{display:inline-block;padding:.4rem 1.2rem;background:var(--celeste);border:2px solid rgba(56, 189, 248, 0.3);border-radius:20px;color:var(--a2);font-weight:800;font-size:.85rem}
 
 .content-area{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
 .section-card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem}
 
 .sem-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;justify-content:center}
 .sem-tab{padding:.6rem 1.4rem;border-radius:25px;border:2px solid var(--b);background:transparent;color:var(--m);cursor:pointer;font-weight:700;font-size:.82rem}
-.sem-tab.active{border-color:var(--a2);color:var(--a2);background:rgba(72,209,142,.1)}
+.sem-tab.active{border-color:var(--a2);color:var(--a2);background:rgba(56,189,248,.1)}
 
 .module-card{background:var(--card2);border:1px solid var(--b);border-radius:16px;margin-bottom:1rem;overflow:hidden}
 .module-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;cursor:pointer}
@@ -38,12 +38,9 @@ header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify
 .topic-label{font-size:.8rem;font-weight:900;color:var(--a2);margin-bottom:.8rem;display:block;text-transform:uppercase}
 
 .mat-link{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--b);text-decoration:none;color:var(--t);margin-top:.5rem;transition:all .2s}
-.mat-link:hover{background:rgba(108,99,255,0.08);border-color:var(--a)}
+.mat-link:hover{background:rgba(14,165,233,0.08);border-color:var(--a)}
 
-@media(max-width:640px){
-  header{padding:0.8rem 1rem}
-  .hero h1{font-size:1.6rem}
-}
+@media(max-width:640px){ header{padding:0.8rem 1rem} .hero h1{font-size:1.6rem} }
 </style>
 </head>
 <body>
@@ -83,7 +80,7 @@ const MALLA = [
   { nivel: "Ingeniería", semestres: [
     { n: "7mo SEMESTRE – INGENIERÍA I", mods: ["Estructuras de Datos Avanzadas", "Algoritmos", "Complejidad Computacional", "Bases de Datos Avanzadas", "Módulo Emergente VII (Validación IA)"] },
     { n: "8vo SEMESTRE – INGENIERÍA II", mods: ["Arquitectura Avanzada", "Microservicios", "Infraestructura", "Seguridad Avanzada", "Módulo Emergente VIII (Automatización IA)"] },
-    { n: "9no SEMESTRE – INGENIERÍA III", mods: ["IA en Desarrollo", "Spec-Driven Development (SDD)", "Ingiería de Prompts", "Automatización Avanzada", "Módulo Emergente IX (Ética IA)"] },
+    { n: "9no SEMESTRE – INGENIERÍA III", mods: ["IA en Desarrollo", "Spec-Driven Development (SDD)", "Ingeniería de Prompts", "Automatización Avanzada", "Módulo Emergente IX (Ética IA)"] },
     { n: "10mo SEMESTRE – INGENIERÍA IV", mods: ["Proyecto de Grado", "Documentación Técnica", "Emprendimiento Tecnológico", "Inserción Laboral", "Módulo Emergente X (IA aplicada)"] }
   ]}
 ];
@@ -111,7 +108,7 @@ function initNav(nivelAsignado) {
   const base = (nivelAsignado || '').split(' ')[0].toLowerCase().trim();
   const lvlData = MALLA.find(l => l.nivel.toLowerCase().includes(base));
   
-  if (!lvlData) return;
+  if (!lvlData) { nav.innerHTML = '<p style="color:var(--m)">Nivel no reconocido. Contacta al administrador.</p>'; return; }
 
   nav.innerHTML = lvlData.semestres.map((s, i) => `
     <button class="sem-tab ${i===0?'active':''}" onclick="renderModules('${lvlData.nivel}', ${i}, this)">${s.n.split(' – ')[0]}</button>
