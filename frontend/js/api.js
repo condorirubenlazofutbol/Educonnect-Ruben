@@ -1,4 +1,4 @@
-const API_URL = "https://sistemas-informaticos-backend.onrender.com";
+const API_URL = "https://educonnect-backend-production-1d08.up.railway.app";
 
 // Dummy data to populate public view before actual DB response
 const dummyLevels = [
