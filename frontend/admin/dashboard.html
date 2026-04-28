@@ -141,11 +141,10 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <div class="section-card">
         <h3>➕ Nuevo Profesor</h3>
         <form class="form-grid" id="form-prof" onsubmit="crearProfesor(event)">
-          <div class="field"><label>Nombre</label><input id="pnombre" required placeholder="Juan"></div>
-          <div class="field"><label>Apellido</label><input id="papellido" required placeholder="Pérez"></div>
-          <div class="field"><label>Email</label><input id="pemail" type="email" required placeholder="juan@edu.com"></div>
-          <div class="field"><label>Contraseña</label><input id="ppass" type="password" required placeholder="••••••••"></div>
-          <div class="field full"><label>Nivel / Semestre asignado</label>
+          <div class="field"><label>Nombres</label><input id="pnombre" required placeholder="Juan"></div>
+          <div class="field"><label>Apellido Paterno</label><input id="papellido" required placeholder="Pérez"></div>
+          <div class="field"><label>Número de Carnet</label><input id="pcarnet" required placeholder="1234567"></div>
+          <div class="field"><label>Nivel / Semestre asignado</label>
             <select id="pnivel">
               <option value="Básico">🔰 Básico</option>
               <option value="Auxiliar">⚙️ Auxiliar</option>
@@ -182,11 +181,10 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <div class="section-card">
         <h3>➕ Nuevo Estudiante</h3>
         <form class="form-grid" id="form-est" onsubmit="crearEstudiante(event)">
-          <div class="field"><label>Nombre</label><input id="enombre" required placeholder="María"></div>
-          <div class="field"><label>Apellido</label><input id="eapellido" required placeholder="García"></div>
-          <div class="field"><label>Email</label><input id="eemail" type="email" required placeholder="maria@edu.com"></div>
-          <div class="field"><label>Contraseña</label><input id="epass" type="password" required placeholder="••••••••"></div>
-          <div class="field full"><label>Nivel inicial</label>
+          <div class="field"><label>Nombres</label><input id="enombre" required placeholder="María"></div>
+          <div class="field"><label>Apellido Paterno</label><input id="eapellido" required placeholder="García"></div>
+          <div class="field"><label>Número de Carnet</label><input id="ecarnet" required placeholder="7654321"></div>
+          <div class="field"><label>Nivel inicial</label>
             <select id="enivel">
               <option value="Básico">🔰 Básico</option>
               <option value="Auxiliar">⚙️ Auxiliar</option>
@@ -197,6 +195,28 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
           </div>
           <div class="field full"><button type="submit" class="btn btn-primary">Inscribir Estudiante</button></div>
         </form>
+      </div>
+
+      <div class="section-card" style="border: 2px dashed var(--a); background: rgba(108,99,255,0.03);">
+        <h3>📂 Carga Masiva (Excel .xlsx)</h3>
+        <p style="font-size: 0.8rem; color: var(--m); margin-bottom: 1rem;">Columnas requeridas: Nombres, Apellido, Carnet.</p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <select id="bulk-nivel" style="flex: 1; min-width: 150px;">
+            <option value="Básico">Para Nivel Básico</option>
+            <option value="Auxiliar">Para Nivel Auxiliar</option>
+            <option value="Medio">Para Nivel Medio</option>
+            <option value="Superior">Para Nivel Superior</option>
+            <option value="Ingeniería">Para Nivel Ingeniería</option>
+          </select>
+          <input type="file" id="file-excel" accept=".xlsx" style="flex: 2;">
+          <button class="btn btn-primary" onclick="uploadExcel()">Subir Archivo</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>📂 Carga Masiva (Excel)</h3>
+        <input type="file" id="file-est" accept=".xlsx, .xls">
+        <button class="btn btn-primary btn-sm" onclick="uploadExcel('estudiante')">Subir Estudiantes</button>
       </div>
 
       <div class="section-card">
@@ -288,8 +308,7 @@ async function crearProfesor(e) {
   const params = new URLSearchParams({
     nombre: document.getElementById('pnombre').value,
     apellido: document.getElementById('papellido').value,
-    email: document.getElementById('pemail').value,
-    password: document.getElementById('ppass').value,
+    carnet: document.getElementById('pcarnet').value,
     nivel_asignado: document.getElementById('pnivel').value
   });
   try {
@@ -297,7 +316,11 @@ async function crearProfesor(e) {
       method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }
     });
     const d = await r.json();
-    if (r.ok) { toast('✅ Profesor creado correctamente'); document.getElementById('form-prof').reset(); loadProfesores(); }
+    if (r.ok) { 
+      toast(`✅ Creado. Email: ${d.email || 'Generado'} Clave: ${document.getElementById('pcarnet').value}`); 
+      document.getElementById('form-prof').reset(); 
+      loadProfesores(); 
+    }
     else toast(d.detail || 'Error al crear profesor', 'error');
   } catch { toast('Error de conexión', 'error'); }
 }
@@ -308,8 +331,7 @@ async function crearEstudiante(e) {
   const body = {
     nombre: document.getElementById('enombre').value,
     apellido: document.getElementById('eapellido').value,
-    email: document.getElementById('eemail').value,
-    password: document.getElementById('epass').value,
+    carnet: document.getElementById('ecarnet').value,
     nivel_asignado: document.getElementById('enivel').value
   };
   try {
@@ -319,9 +341,39 @@ async function crearEstudiante(e) {
       body: JSON.stringify(body)
     });
     const d = await r.json();
-    if (r.ok) { toast('✅ Estudiante inscrito correctamente'); document.getElementById('form-est').reset(); loadEstudiantes(); }
+    if (r.ok) { 
+      toast(`✅ Inscrito. Email: ${d.email} Clave: ${body.carnet}`); 
+      document.getElementById('form-est').reset(); 
+      loadEstudiantes(); 
+    }
     else toast(d.detail || 'Error al inscribir', 'error');
   } catch { toast('Error de conexión', 'error'); }
+}
+
+// ─── Carga Masiva Excel ───────────────────────────────────────────────────────
+async function uploadExcel() {
+  const fileInput = document.getElementById('file-excel');
+  const nivel = document.getElementById('bulk-nivel').value;
+  if (!fileInput.files[0]) return toast('Selecciona un archivo .xlsx', 'error');
+
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+
+  try {
+    toast('Subiendo y procesando...', 'warning');
+    const r = await fetch(`${API_URL}/auth/bulk-register?nivel=${nivel}`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + TOKEN },
+      body: formData
+    });
+    const d = await r.json();
+    if (r.ok) {
+      toast(`✅ ¡Éxito! Registrados: ${d.registrados}. Errores: ${d.errores.length}`);
+      loadEstudiantes();
+    } else {
+      toast(d.detail || 'Error en la subida', 'error');
+    }
+  } catch { toast('Error de conexión con el servidor', 'error'); }
 }
 
 // ─── Eliminar usuario ─────────────────────────────────────────────────────────

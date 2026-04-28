@@ -37,8 +37,20 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 
 /* LOCK NOTICE */
 .lock-notice{position:relative;z-index:1;max-width:700px;margin:0 auto 2rem;text-align:center}
-.lock-banner{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:16px;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.75rem;font-size:.88rem;color:var(--m)}
-.lock-banner strong{color:var(--t)}
+        .level-card {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: transform .3s ease, border-color .3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
 
 /* LEVELS */
 .levels-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 1.5rem 5rem}

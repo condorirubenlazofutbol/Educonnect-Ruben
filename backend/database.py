@@ -51,7 +51,8 @@ def init_db():
                 email VARCHAR(150) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 rol VARCHAR(20) NOT NULL DEFAULT 'estudiante',
-                nivel_asignado VARCHAR(100)
+                nivel_asignado VARCHAR(100),
+                carnet VARCHAR(50)
             )
         ''')
 
@@ -104,6 +105,7 @@ def init_db():
         # Add columns if they dont exist yet (safe migrations)
         for col_sql in [
             "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS nivel_asignado VARCHAR(100)",
+            "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS carnet VARCHAR(50)",
             "ALTER TABLE modulos ADD COLUMN IF NOT EXISTS orden INT DEFAULT 0",
             "ALTER TABLE contenidos ADD COLUMN IF NOT EXISTS tema_num INT DEFAULT 1",
             "ALTER TABLE contenidos ALTER COLUMN url SET DEFAULT ''",
