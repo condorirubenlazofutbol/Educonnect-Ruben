@@ -171,16 +171,10 @@ function toggle(id) {
 }
 
 render();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(registration => {
-      console.log('SW registrado: ', registration.scope);
-    }).catch(err => {
-      console.log('Fallo registro SW: ', err);
-    });
-  });
-}
 </script>
+
+<!-- script para instalar a pantalla -->
+<script src="./instalar/pwa.js"></script>
+
 </body>
 </html>
