@@ -3,117 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduConnect – Admin Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="../js/api.js"></script>
+<title>EduConnect – Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--a:#0ea5e9;--a2:#38bdf8;--dark:#0b0f1a;--card:#131929;--card2:#1a2338;--b:rgba(255,255,255,.07);--t:#e8eaf0;--m:rgba(255,255,255,.45);--celeste:rgba(56, 189, 248, 0.15)}
+:root{--a:#0ea5e9;--a2:#38bdf8;--dark:#0b0f1a;--card:#131929;--card2:#1a2338;--b:rgba(255,255,255,.08);--t:#e8eaf0;--m:rgba(255,255,255,.45);--cel:rgba(56,189,248,.13)}
 body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--t);min-height:100vh;overflow-x:hidden}
 
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.5rem;border-bottom:1px solid var(--b);backdrop-filter:blur(14px);background:rgba(11,15,26,.9)}
-.logo-img{height:40px;object-fit:contain}
-.btn-out{background:rgba(56,189,248,.1);color:var(--a2);border:1px solid rgba(56,189,248,.3);padding:.4rem .8rem;border-radius:20px;cursor:pointer;font-weight:700;font-size:.7rem}
+/* HEADER */
+.topbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;background:rgba(11,15,26,.95);border-bottom:1px solid var(--b);backdrop-filter:blur(12px)}
+.topbar-title{font-size:1rem;font-weight:800;color:var(--a2)}
+.btn-logout{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3);padding:.4rem .9rem;border-radius:16px;cursor:pointer;font-weight:700;font-size:.72rem}
 
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px)}
-aside{border-right:1px solid var(--b);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:.3rem;background:var(--dark)}
-.nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-radius:12px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--m);transition:all .2s;border:none;background:none;width:100%;text-align:left}
-.nav-item.active{background:rgba(14,165,233,0.1);color:var(--a);border:1px solid rgba(14,165,233,0.2)}
+/* NAV TABS */
+.nav-tabs{display:flex;gap:.4rem;padding:.6rem 1.2rem;border-bottom:1px solid var(--b);overflow-x:auto;background:rgba(11,15,26,.8)}
+.nav-tabs::-webkit-scrollbar{display:none}
+.tab{padding:.45rem 1rem;border-radius:20px;border:1.5px solid var(--b);background:none;color:var(--m);font-weight:700;font-size:.72rem;cursor:pointer;white-space:nowrap;transition:.2s}
+.tab.active{border-color:var(--a2);color:var(--a2);background:var(--cel)}
 
-main{padding:1.5rem;overflow-y:auto;max-width:100vw}
-.section-card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:1.2rem;margin-bottom:1.5rem}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem}
-.field{display:flex;flex-direction:column;gap:.4rem}
-label{font-size:.65rem;font-weight:800;text-transform:uppercase;color:var(--m)}
-input,select{background:rgba(255,255,255,.05);border:1px solid var(--b);border-radius:10px;padding:.7rem;color:var(--t);outline:none;font-size:.85rem}
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:1.2rem}
 
-.btn-primary{background:var(--a);color:#fff;border:none;padding:.8rem;border-radius:10px;font-weight:700;cursor:pointer;width:100%;margin-top:1rem}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin-bottom:1.4rem}
+.stat-card{background:var(--cel);border:1.5px solid rgba(56,189,248,.25);border-radius:16px;padding:1rem;text-align:center}
+.stat-num{font-size:2rem;font-weight:900;color:var(--a2)}
+.stat-label{font-size:.65rem;color:var(--m);font-weight:600;text-transform:uppercase;margin-top:.2rem}
 
-.tbl-wrap{overflow-x:auto;margin-top:1rem;border-radius:12px;background:rgba(0,0,0,0.2)}
-table{width:100%;border-collapse:collapse;font-size:.75rem;min-width:500px}
-th{text-align:left;padding:.8rem;color:var(--m);border-bottom:1px solid var(--b);text-transform:uppercase}
-td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.03)}
+/* TABLE BY LEVEL */
+.level-group{background:var(--card);border:1px solid var(--b);border-radius:16px;margin-bottom:1rem;overflow:hidden}
+.level-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;cursor:pointer;background:rgba(56,189,248,.05)}
+.level-header h4{font-size:.85rem;font-weight:800;color:var(--a2)}
+.level-body{display:none;padding:.8rem 1.2rem 1.2rem}
+.level-group.open .level-body{display:block}
+.tbl-wrap{overflow-x:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:400px;font-size:.75rem}
+th{text-align:left;padding:.6rem .8rem;color:var(--m);border-bottom:1px solid var(--b);text-transform:uppercase;font-size:.62rem}
+td{padding:.6rem .8rem;border-bottom:1px solid rgba(255,255,255,.03)}
+.tag{padding:.2rem .6rem;border-radius:20px;font-size:.6rem;font-weight:700;background:var(--cel);color:var(--a2)}
 
-.bulk-box{border:2px dashed var(--a);background:rgba(14,165,233,0.03);border-radius:16px;padding:1rem;margin-bottom:1.5rem}
-.bulk-controls{display:flex;flex-direction:column;gap:.8rem}
+/* CARD SECTION */
+.card{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:1.2rem;margin-bottom:1.2rem}
+.card h3{font-size:.9rem;font-weight:800;margin-bottom:1rem}
 
-@media(max-width:768px){
-  .layout{grid-template-columns:1fr}
-  aside{flex-direction:row;padding:.5rem;border-right:none;border-bottom:1px solid var(--b);position:sticky;top:58px;z-index:90;overflow-x:auto}
-  .nav-item{padding:.5rem .8rem;font-size:.75rem;white-space:nowrap;width:auto}
-  main{padding:1rem}
-  .form-grid{grid-template-columns:1fr}
-}
+/* FORM */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.6rem;font-weight:800;color:var(--m);text-transform:uppercase}
+.field input,.field select{background:rgba(255,255,255,.05);border:1px solid var(--b);border-radius:8px;padding:.6rem;color:var(--t);font-size:.82rem;outline:none;width:100%}
+.field input:focus{border-color:var(--a)}
+.btn-primary{background:var(--a);color:#fff;border:none;padding:.75rem;border-radius:10px;font-weight:800;cursor:pointer;width:100%;margin-top:.8rem;font-size:.82rem}
+.btn-green{background:#10b981;color:#fff;border:none;padding:.75rem;border-radius:10px;font-weight:800;cursor:pointer;width:100%;font-size:.82rem}
+
+/* BULK */
+.bulk-area{background:rgba(14,165,233,.04);border:2px dashed rgba(14,165,233,.3);border-radius:14px;padding:1rem;margin-bottom:1.2rem}
+.bulk-area h4{font-size:.8rem;font-weight:800;margin-bottom:.8rem;color:var(--a2)}
+.bulk-row{display:flex;flex-direction:column;gap:.6rem}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#0f172a;border:1.5px solid var(--a);padding:.8rem 1.6rem;border-radius:12px;font-size:.82rem;font-weight:700;display:none;z-index:999;white-space:nowrap}
+
+/* ALERT */
+#err-box{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#fca5a5;border-radius:10px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.75rem;display:none}
+
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
-  <img src="../images/logo.png" alt="EduConnect" class="logo-img">
-  <button class="btn-out" onclick="logout()">Salir</button>
-</header>
 
-<div class="layout">
-  <aside id="sidebar">
-    <button class="nav-item active" onclick="showPage('profesores',this)">👨‍🏫 Profesores</button>
-    <button class="nav-item" onclick="showPage('estudiantes',this)">🎓 Estudiantes</button>
-  </aside>
+<div class="topbar">
+  <div class="topbar-title">🎓 EduConnect Admin</div>
+  <button class="btn-logout" id="btn-logout">Cerrar Sesión</button>
+</div>
 
-  <main>
-    <div id="page-profesores" class="page">
-      <div class="section-card">
-        <h3 style="font-size:1rem;margin-bottom:1rem">➕ Nuevo Profesor</h3>
-        <form class="form-grid" onsubmit="crearProfesor(event)">
-          <div class="field"><label>Nombres</label><input id="pnombre" required></div>
-          <div class="field"><label>Apellidos</label><input id="papellido" required></div>
-          <div class="field"><label>Carnet</label><input id="pcarnet" required></div>
-          <div class="field"><label>Nivel Asignado</label>
-            <select id="pnivel">
-              <option value="Básico – 1er SEMESTRE">1er SEMESTRE – BÁSICO</option>
-              <option value="Auxiliar – 2do SEMESTRE">2do SEMESTRE – AUXILIAR</option>
-              <option value="Medio – 3er SEMESTRE">3er SEMESTRE – MEDIO I</option>
-              <option value="Medio – 4to SEMESTRE">4to SEMESTRE – MEDIO II</option>
-              <option value="Superior – 5to SEMESTRE">5to SEMESTRE – SUPERIOR I</option>
-              <option value="Superior – 6to SEMESTRE">6to SEMESTRE – SUPERIOR II</option>
-              <option value="Ingeniería – 7mo SEMESTRE">7mo SEMESTRE – INGENIERÍA I</option>
-              <option value="Ingeniería – 8vo SEMESTRE">8vo SEMESTRE – INGENIERÍA II</option>
-              <option value="Ingeniería – 9no SEMESTRE">9no SEMESTRE – INGENIERÍA III</option>
-              <option value="Ingeniería – 10mo SEMESTRE">10mo SEMESTRE – INGENIERÍA IV</option>
+<div class="nav-tabs">
+  <button class="tab active" data-page="resumen">📊 Resumen</button>
+  <button class="tab" data-page="profesores">👨‍🏫 Profesores</button>
+  <button class="tab" data-page="estudiantes">🎓 Estudiantes</button>
+</div>
+
+<div class="content">
+  <div id="err-box"></div>
+
+  <!-- RESUMEN -->
+  <div id="page-resumen" class="page">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="s-total">–</div><div class="stat-label">Total Inscritos</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-prof">–</div><div class="stat-label">Profesores</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-est">–</div><div class="stat-label">Estudiantes</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-niv">–</div><div class="stat-label">Niveles Activos</div></div>
+    </div>
+    <h3 style="font-size:.85rem;font-weight:800;color:var(--m);margin-bottom:.8rem;text-transform:uppercase">Estudiantes por Nivel</h3>
+    <div id="level-summary"></div>
+  </div>
+
+  <!-- PROFESORES -->
+  <div id="page-profesores" class="page" style="display:none">
+    <div class="card">
+      <h3>➕ Registrar Profesor</h3>
+      <form id="form-prof">
+        <div class="form-grid">
+          <div class="field"><label>Nombres</label><input id="p-nombre" required placeholder="Ej: Juan Carlos"></div>
+          <div class="field"><label>Apellidos</label><input id="p-apellido" required placeholder="Ej: Pérez López"></div>
+          <div class="field"><label>Carnet</label><input id="p-carnet" required placeholder="Ej: 2024001"></div>
+          <div class="field"><label>Semestre Asignado</label>
+            <select id="p-nivel">
+              <option value="Básico – 1er SEMESTRE">1er SEM – BÁSICO</option>
+              <option value="Auxiliar – 2do SEMESTRE">2do SEM – AUXILIAR</option>
+              <option value="Medio – 3er SEMESTRE">3er SEM – MEDIO I</option>
+              <option value="Medio – 4to SEMESTRE">4to SEM – MEDIO II</option>
+              <option value="Superior – 5to SEMESTRE">5to SEM – SUPERIOR I</option>
+              <option value="Superior – 6to SEMESTRE">6to SEM – SUPERIOR II</option>
+              <option value="Ingeniería – 7mo SEMESTRE">7mo SEM – ING. I</option>
+              <option value="Ingeniería – 8vo SEMESTRE">8vo SEM – ING. II</option>
+              <option value="Ingeniería – 9no SEMESTRE">9no SEM – ING. III</option>
+              <option value="Ingeniería – 10mo SEMESTRE">10mo SEM – ING. IV</option>
             </select>
           </div>
-          <button type="submit" class="btn-primary" style="grid-column:1/-1">Crear Profesor</button>
-        </form>
-      </div>
-
-      <div class="bulk-box">
-        <h4 style="font-size:.85rem;margin-bottom:.8rem">📂 Carga Masiva Profesores</h4>
-        <div class="bulk-controls">
-          <select id="bulk-nivel-p">
-            <option value="Básico">Básico</option>
-            <option value="Auxiliar">Auxiliar</option>
-            <option value="Medio">Medio</option>
-            <option value="Superior">Superior</option>
-            <option value="Ingeniería">Ingeniería</option>
-          </select>
-          <input type="file" id="file-p" accept=".xlsx">
-          <button onclick="uploadExcel('profesor')" style="background:var(--a2);color:#fff;border:none;padding:.8rem;border-radius:10px;font-weight:800">🚀 Procesar Excel</button>
         </div>
-      </div>
-
-      <div class="section-card">
-        <h3 style="font-size:1rem;margin-bottom:1rem">📋 Lista de Profesores</h3>
-        <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Nivel</th><th>Acción</th></tr></thead><tbody id="tbl-prof"></tbody></table></div>
+        <button type="submit" class="btn-primary">Crear Profesor</button>
+      </form>
+    </div>
+    <div class="bulk-area">
+      <h4>📂 Carga Masiva (.xlsx)</h4>
+      <div class="bulk-row">
+        <select id="bulk-nivel-p">
+          <option value="Básico">Básico</option><option value="Auxiliar">Auxiliar</option>
+          <option value="Medio">Medio</option><option value="Superior">Superior</option>
+          <option value="Ingeniería">Ingeniería</option>
+        </select>
+        <input type="file" id="file-p" accept=".xlsx">
+        <button class="btn-green" onclick="uploadExcel('profesor')">🚀 Subir Excel</button>
       </div>
     </div>
+    <div class="card">
+      <h3>📋 Profesores Registrados</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Nivel</th><th>⚙️</th></tr></thead><tbody id="tbl-prof"><tr><td colspan="4" style="color:var(--m);text-align:center">Cargando...</td></tr></tbody></table></div>
+    </div>
+  </div>
 
-    <div id="page-estudiantes" class="page" style="display:none">
-      <div class="section-card">
-        <h3 style="font-size:1rem;margin-bottom:1rem">➕ Nuevo Estudiante</h3>
-        <form class="form-grid" onsubmit="crearEstudiante(event)">
-          <div class="field"><label>Nombres</label><input id="enombre" required></div>
-          <div class="field"><label>Apellidos</label><input id="eapellido" required></div>
-          <div class="field"><label>Carnet</label><input id="ecarnet" required></div>
-          <div class="field"><label>Nivel de Ingreso</label>
-            <select id="enivel">
+  <!-- ESTUDIANTES -->
+  <div id="page-estudiantes" class="page" style="display:none">
+    <div class="card">
+      <h3>➕ Inscribir Estudiante</h3>
+      <form id="form-est">
+        <div class="form-grid">
+          <div class="field"><label>Nombres</label><input id="e-nombre" required placeholder="Ej: María"></div>
+          <div class="field"><label>Apellidos</label><input id="e-apellido" required placeholder="Ej: García"></div>
+          <div class="field"><label>Carnet</label><input id="e-carnet" required placeholder="Ej: 2024002"></div>
+          <div class="field"><label>Nivel</label>
+            <select id="e-nivel">
               <option value="Básico">NIVEL BÁSICO</option>
               <option value="Auxiliar">NIVEL AUXILIAR</option>
               <option value="Medio">NIVEL MEDIO</option>
@@ -121,111 +160,232 @@ td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.03)}
               <option value="Ingeniería">NIVEL INGENIERÍA</option>
             </select>
           </div>
-          <button type="submit" class="btn-primary" style="grid-column:1/-1">Inscribir Estudiante</button>
-        </form>
-      </div>
-
-      <div class="bulk-box">
-        <h4 style="font-size:.85rem;margin-bottom:.8rem">📂 Carga Masiva Estudiantes</h4>
-        <div class="bulk-controls">
-          <select id="bulk-nivel-e">
-            <option value="Básico">Básico</option>
-            <option value="Auxiliar">Auxiliar</option>
-            <option value="Medio">Medio</option>
-            <option value="Superior">Superior</option>
-            <option value="Ingeniería">Ingeniería</option>
-          </select>
-          <input type="file" id="file-e" accept=".xlsx">
-          <button onclick="uploadExcel('estudiante')" style="background:var(--a2);color:#fff;border:none;padding:.8rem;border-radius:10px;font-weight:800">🚀 Procesar Excel</button>
         </div>
-      </div>
-
-      <div class="section-card">
-        <h3 style="font-size:1rem;margin-bottom:1rem">📋 Lista de Estudiantes</h3>
-        <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Nivel</th><th>Acción</th></tr></thead><tbody id="tbl-est"></tbody></table></div>
+        <button type="submit" class="btn-primary">Inscribir Estudiante</button>
+      </form>
+    </div>
+    <div class="bulk-area">
+      <h4>📂 Carga Masiva (.xlsx)</h4>
+      <div class="bulk-row">
+        <select id="bulk-nivel-e">
+          <option value="Básico">Básico</option><option value="Auxiliar">Auxiliar</option>
+          <option value="Medio">Medio</option><option value="Superior">Superior</option>
+          <option value="Ingeniería">Ingeniería</option>
+        </select>
+        <input type="file" id="file-e" accept=".xlsx">
+        <button class="btn-green" onclick="uploadExcel('estudiante')">🚀 Subir Excel</button>
       </div>
     </div>
-  </main>
+    <div class="card">
+      <h3>📋 Estudiantes Inscritos</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Nivel</th><th>⚙️</th></tr></thead><tbody id="tbl-est"><tr><td colspan="4" style="color:var(--m);text-align:center">Cargando...</td></tr></tbody></table></div>
+    </div>
+  </div>
 </div>
 
-<script>
-const TOKEN = localStorage.getItem('token');
-const API_URL = "https://educonnect-backend-production-1d08.up.railway.app";
+<div id="toast"></div>
 
+<script>
+const API = "https://educonnect-backend-production-1d08.up.railway.app";
+let TOKEN = localStorage.getItem('token');
+let PROFS = [], ESTS = [];
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const u = JSON.parse(localStorage.getItem('user') || '{}');
-  if (!TOKEN || u.rol !== 'administrador') { window.location.href = '../login.html'; return; }
-  loadProfesores(); loadEstudiantes();
+  if (!TOKEN || u.rol !== 'administrador') {
+    window.location.replace('../login.html');
+    return;
+  }
+  loadAll();
+  setupTabs();
+  setupForms();
+  document.getElementById('btn-logout').addEventListener('click', doLogout);
 });
 
-function logout() { localStorage.clear(); window.location.href = '../login.html'; }
+function doLogout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  window.location.replace('../login.html');
+}
 
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-'+id).style.display = 'block';
-  btn.classList.add('active');
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function setupTabs() {
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      btn.classList.add('active');
+      document.getElementById('page-' + btn.dataset.page).style.display = 'block';
+    });
+  });
+}
+
+// ── LOAD DATA ──────────────────────────────────────────────────────────────────
+async function loadAll() {
+  await Promise.all([loadProfesores(), loadEstudiantes()]);
+  renderResumen();
 }
 
 async function loadProfesores() {
-  const r = await fetch(API_URL + '/auth/profesores', { headers: { Authorization: 'Bearer ' + TOKEN } });
-  const d = await r.json();
-  document.getElementById('tbl-prof').innerHTML = (d.profesores || []).map(p => `
-    <tr><td>${p.nombre} ${p.apellido}</td><td>${p.email}</td><td>${p.nivel_asignado}</td><td><button onclick="del(${p.id})">❌</button></td></tr>
-  `).join('');
+  try {
+    const r = await fetch(API + '/auth/profesores', { headers: { Authorization: 'Bearer ' + TOKEN } });
+    if (!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+    PROFS = d.profesores || [];
+    renderProfesores();
+  } catch(e) { showErr('Error cargando profesores: ' + e.message); }
 }
 
 async function loadEstudiantes() {
-  const r = await fetch(API_URL + '/auth/estudiantes', { headers: { Authorization: 'Bearer ' + TOKEN } });
-  const d = await r.json();
-  document.getElementById('tbl-est').innerHTML = (d.estudiantes || []).map(e => `
-    <tr><td>${e.nombre} ${e.apellido}</td><td>${e.email}</td><td>${e.nivel_asignado}</td><td><button onclick="del(${e.id})">❌</button></td></tr>
+  try {
+    const r = await fetch(API + '/auth/estudiantes', { headers: { Authorization: 'Bearer ' + TOKEN } });
+    if (!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+    ESTS = d.estudiantes || [];
+    renderEstudiantes();
+  } catch(e) { showErr('Error cargando estudiantes: ' + e.message); }
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function renderResumen() {
+  document.getElementById('s-total').textContent = PROFS.length + ESTS.length;
+  document.getElementById('s-prof').textContent = PROFS.length;
+  document.getElementById('s-est').textContent = ESTS.length;
+
+  const niveles = [...new Set(ESTS.map(e => e.nivel_asignado).filter(Boolean))];
+  document.getElementById('s-niv').textContent = niveles.length;
+
+  const grouped = {};
+  ESTS.forEach(e => {
+    const n = e.nivel_asignado || 'Sin nivel';
+    if (!grouped[n]) grouped[n] = [];
+    grouped[n].push(e);
+  });
+
+  const html = Object.entries(grouped).sort().map(([nivel, lista]) => `
+    <div class="level-group">
+      <div class="level-header" onclick="this.parentElement.classList.toggle('open')">
+        <h4>🔰 ${nivel} <span style="color:var(--m);font-weight:600;font-size:.7rem">(${lista.length} estudiante${lista.length !== 1 ? 's' : ''})</span></h4>
+        <span style="color:var(--m)">▼</span>
+      </div>
+      <div class="level-body">
+        <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Carnet</th></tr></thead>
+        <tbody>${lista.map(e => `<tr><td>${e.nombre} ${e.apellido || ''}</td><td>${e.email}</td><td><span class="tag">${e.carnet || '–'}</span></td></tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>
   `).join('');
+
+  document.getElementById('level-summary').innerHTML = html || '<p style="color:var(--m)">Aún no hay estudiantes inscritos.</p>';
 }
 
-async function crearProfesor(e) {
-  e.preventDefault();
-  const n = document.getElementById('pnombre').value;
-  const a = document.getElementById('papellido').value;
-  const c = document.getElementById('pcarnet').value;
-  const nv = document.getElementById('pnivel').value;
-  const r = await fetch(API_URL + `/auth/register-profesor?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}&carnet=${c}&nivel_asignado=${encodeURIComponent(nv)}`, {
-    method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }
+function renderProfesores() {
+  document.getElementById('tbl-prof').innerHTML = PROFS.length
+    ? PROFS.map(p => `<tr>
+        <td>${p.nombre} ${p.apellido || ''}</td>
+        <td style="font-size:.7rem;color:var(--m)">${p.email}</td>
+        <td><span class="tag">${p.nivel_asignado || '–'}</span></td>
+        <td><button onclick="delUser(${p.id},'prof')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:.8rem">🗑</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="4" style="color:var(--m);text-align:center;padding:1rem">Sin profesores registrados</td></tr>';
+}
+
+function renderEstudiantes() {
+  document.getElementById('tbl-est').innerHTML = ESTS.length
+    ? ESTS.map(e => `<tr>
+        <td>${e.nombre} ${e.apellido || ''}</td>
+        <td style="font-size:.7rem;color:var(--m)">${e.email}</td>
+        <td><span class="tag">${e.nivel_asignado || '–'}</span></td>
+        <td><button onclick="delUser(${e.id},'est')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:.8rem">🗑</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="4" style="color:var(--m);text-align:center;padding:1rem">Sin estudiantes inscritos</td></tr>';
+}
+
+// ── FORMS ──────────────────────────────────────────────────────────────────
+function setupForms() {
+  document.getElementById('form-prof').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const n  = document.getElementById('p-nombre').value.trim();
+    const a  = document.getElementById('p-apellido').value.trim();
+    const c  = document.getElementById('p-carnet').value.trim();
+    const nv = document.getElementById('p-nivel').value;
+    if (!n || !a || !c) return showErr('Completa todos los campos');
+    try {
+      const r = await fetch(`${API}/auth/register-profesor?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}&carnet=${encodeURIComponent(c)}&nivel_asignado=${encodeURIComponent(nv)}`, {
+        method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || 'Error al registrar');
+      toast('✅ Profesor creado – Email: ' + d.email);
+      e.target.reset();
+      await loadProfesores(); renderResumen();
+    } catch(err) { showErr(err.message); }
   });
-  if(r.ok) { alert('✅ Profesor creado'); loadProfesores(); e.target.reset(); }
-}
 
-async function crearEstudiante(e) {
-  e.preventDefault();
-  const body = {
-    nombre: document.getElementById('enombre').value,
-    apellido: document.getElementById('eapellido').value,
-    carnet: document.getElementById('ecarnet').value,
-    nivel_asignado: document.getElementById('enivel').value
-  };
-  const r = await fetch(API_URL + '/auth/register-estudiante', {
-    method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+  document.getElementById('form-est').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const body = {
+      nombre:         document.getElementById('e-nombre').value.trim(),
+      apellido:       document.getElementById('e-apellido').value.trim(),
+      carnet:         document.getElementById('e-carnet').value.trim(),
+      nivel_asignado: document.getElementById('e-nivel').value
+    };
+    if (!body.nombre || !body.apellido || !body.carnet) return showErr('Completa todos los campos');
+    try {
+      const r = await fetch(API + '/auth/register-estudiante', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || 'Error al inscribir');
+      toast('✅ Estudiante inscrito – Email: ' + d.email);
+      e.target.reset();
+      await loadEstudiantes(); renderResumen();
+    } catch(err) { showErr(err.message); }
   });
-  if(r.ok) { alert('✅ Estudiante inscrito'); loadEstudiantes(); e.target.reset(); }
 }
 
+// ── EXCEL ──────────────────────────────────────────────────────────────────
 async function uploadExcel(role) {
-  const fileInput = document.getElementById(role === 'profesor' ? 'file-p' : 'file-e');
-  const file = fileInput.files[0];
-  const nivel = document.getElementById(role === 'profesor' ? 'bulk-nivel-p' : 'bulk-nivel-e').value;
-  if(!file) return alert('Selecciona un archivo Excel');
-  const fd = new FormData(); fd.append('file', file);
-  const r = await fetch(`${API_URL}/auth/bulk-register?nivel=${encodeURIComponent(nivel)}&rol=${role}`, {
-    method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }, body: fd
-  });
-  if(r.ok) { alert('✅ Carga masiva exitosa'); role === 'profesor' ? loadProfesores() : loadEstudiantes(); fileInput.value=''; }
+  const fi = document.getElementById(role === 'profesor' ? 'file-p' : 'file-e');
+  const nv = document.getElementById(role === 'profesor' ? 'bulk-nivel-p' : 'bulk-nivel-e').value;
+  if (!fi.files[0]) return showErr('Selecciona un archivo Excel (.xlsx)');
+  const fd = new FormData(); fd.append('file', fi.files[0]);
+  try {
+    const r = await fetch(`${API}/auth/bulk-register?nivel=${encodeURIComponent(nv)}&rol=${role}`, {
+      method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN }, body: fd
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Error en carga masiva');
+    toast(`✅ ${d.registrados} ${role}(s) registrados` + (d.errores?.length ? ` – ${d.errores.length} errores` : ''));
+    fi.value = '';
+    await loadAll();
+  } catch(err) { showErr(err.message); }
 }
 
-async function del(id) {
-  if(!confirm('¿Estás seguro de eliminar este usuario?')) return;
-  const r = await fetch(API_URL + '/modulos/usuarios/' + id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + TOKEN } });
-  if(r.ok) { loadProfesores(); loadEstudiantes(); }
+// ── DELETE ──────────────────────────────────────────────────────────────────
+async function delUser(id, type) {
+  if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return;
+  try {
+    const r = await fetch(`${API}/auth/usuarios/${id}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + TOKEN } });
+    if (!r.ok) throw new Error('Error al eliminar');
+    toast('🗑 Usuario eliminado');
+    await loadAll();
+  } catch(err) { showErr(err.message); }
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+function showErr(msg) {
+  const el = document.getElementById('err-box');
+  el.textContent = '⚠️ ' + msg; el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
 }
 </script>
 </body>
