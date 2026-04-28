@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect CEA – Sistemas Informáticos | Pailón, Santa Cruz</title>
+    <meta name="description"
+        content="Plataforma educativa del CEA Prof. Hérman Ortíz Camargo. Accede a tus módulos de Sistemas Informáticos, materiales y calificaciones en línea.">
+
+    <!-- ═══ Open Graph (Facebook, WhatsApp, Telegram) ═══ -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sistemas-informaticos-cea.onrender.com/index.html">
+    <meta property="og:title" content="EduConnect CEA – Sistemas Informáticos">
+    <meta property="og:description"
+        content="Plataforma LMS del CEA Prof. Hérman Ortíz Camargo — Pailón, Santa Cruz. Módulos, materiales y calificaciones en línea.">
+    <meta property="og:image" content="https://sistemas-informaticos-cea.onrender.com/images/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="es_BO">
+    <meta property="og:site_name" content="EduConnect CEA Pailón">
+
+    <!-- ═══ Twitter Card ═══ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EduConnect CEA – Sistemas Informáticos">
+    <meta name="twitter:description" content="Plataforma LMS del CEA Prof. Hérman Ortíz Camargo — Pailón, Santa Cruz.">
+    <meta name="twitter:image" content="https://sistemas-informaticos-cea.onrender.com/images/og-preview.png">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Instalar PWA -->
+    <link rel="manifest" href="/instalar/manifest.json">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="images/logo.png" alt="EduConnect Logo" class="logo-img">
+        </div>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="login.html" class="btn-login">Iniciar Sesión</a>
+        </nav>
+    </header>
+
+    <main class="hero">
+        <div class="hero-content">
+            <h1>Bienvenido a la Plataforma Educativa</h1>
+            <p>Aprende Sistemas Informáticos con la mejor estructura académica dividida por niveles.</p>
+        </div>
+    </main>
+
+    <section class="levels-section" id="levels-container">
+        <!-- Levels and Modules will be injected here via JS -->
+    </section>
+
+    <script src="js/api.js"></script>
+    <script src="js/public.js"></script>
+
+
+
+    <!-- script para instalar a pantalla -->
+    <script src="/instalar/pwa.js"></script>
+
+</body>
+
+</html>

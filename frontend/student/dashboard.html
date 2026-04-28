@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Mi Aprendizaje</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2980b9;
+            --dark: #1b4f72;
+            --green: #2ecc71;
+            --bg: #0d1b2a;
+            --card: #162032;
+            --text: #e0e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(22, 32, 50, .95);
+            backdrop-filter: blur(8px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .logo-txt {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-txt span {
+            color: var(--green);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: .9rem;
+            color: white;
+        }
+
+        .btn-out {
+            background: rgba(231, 76, 60, .15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: .4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .82rem;
+            transition: all .2s;
+        }
+
+        .btn-out:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--dark), #0d1b2a);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: .5rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, .6);
+            font-size: .95rem;
+        }
+
+        /* Tabs */
+        .level-tabs {
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            padding: 1.5rem 1rem .5rem;
+            flex-wrap: wrap;
+        }
+
+        .level-tab {
+            padding: .6rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, .15);
+            background: transparent;
+            color: rgba(255, 255, 255, .6);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .85rem;
+            transition: all .25s;
+        }
+
+        .level-tab.active {
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(46, 204, 113, .08);
+        }
+
+        .level-tab:hover:not(.active) {
+            border-color: rgba(255, 255, 255, .4);
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .module-card {
+            background: var(--card);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, .07);
+            overflow: hidden;
+            transition: all .2s;
+        }
+
+        .module-card:hover {
+            border-color: rgba(41, 128, 185, .4);
+        }
+
+        .module-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+        }
+
+        .module-card-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .expand-icon {
+            color: rgba(255, 255, 255, .4);
+            font-size: 1.1rem;
+            transition: transform .2s;
+        }
+
+        .module-card.open .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .module-body {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .module-card.open .module-body {
+            display: block;
+        }
+
+        /* Topic tabs */
+        .topic-tabs {
+            display: flex;
+            gap: .4rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .topic-tab {
+            padding: .35rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            background: transparent;
+            color: rgba(255, 255, 255, .5);
+            cursor: pointer;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .topic-tab.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* Material cards */
+        .materials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: .75rem;
+        }
+
+        .mat-card {
+            background: rgba(255, 255, 255, .05);
+            border-radius: 10px;
+            padding: 1rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .5rem;
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: all .2s;
+            cursor: pointer;
+        }
+
+        .mat-card:hover {
+            background: rgba(41, 128, 185, .2);
+            border-color: var(--blue);
+            transform: translateY(-2px);
+        }
+
+        .mat-icon {
+            font-size: 1.8rem;
+        }
+
+        .mat-label {
+            font-size: .75rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, .7);
+            text-align: center;
+        }
+
+        .mat-link {
+            font-size: .68rem;
+            color: var(--blue);
+            word-break: break-all;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .empty-mat {
+            color: rgba(255, 255, 255, .25);
+            font-size: .75rem;
+            text-align: center;
+            padding: .5rem 0;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, .3);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media(max-width:600px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .level-tab {
+                font-size: .78rem;
+                padding: .5rem 1rem;
+            }
+
+            .materials {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="../images/logo.png" alt="EduConnect Ruben"
+                style="height: 95px; max-width: 220px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.5)); transition: all 0.3s ease;">
+        </div>
+        <div class="user-chip">
+            <div class="user-avatar" id="avatar">R</div>
+            <span id="user-name" style="font-weight:600;font-size:.9rem;">Estudiante</span>
+            <button class="btn-out" onclick="logout()">Salir</button>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1 id="welcome-msg">¡Bienvenido a tu Plataforma de Aprendizaje!</h1>
+        <p>Selecciona un nivel y explora tus módulos de estudio</p>
+    </div>
+
+    <div class="level-tabs" id="level-tabs-container">
+        <!-- Se inyecta el nivel asignado aquí -->
+    </div>
+
+    <div class="content">
+        <div id="modulos-list">
+            <div class="empty-state">
+                <div class="icon">⏳</div>
+                <p>Cargando módulos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        const TOKEN = localStorage.getItem('token');
+        let nivelActual = '';
+        let todosModulos = [];
+        let cacheContenidos = {};
+        let misNotas = {};
+
+        let todosNiveles = [];
+        let todosSubniveles = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const u = JSON.parse(localStorage.getItem('user') || '{}');
+            if (u.nombre) {
+                document.getElementById('user-name').textContent = u.nombre;
+                document.getElementById('avatar').textContent = u.nombre[0].toUpperCase();
+                document.getElementById('welcome-msg').textContent = `¡Hola, ${u.nombre}! Aquí tu aprendizaje`;
+
+                // Set the assigned level
+                nivelActual = u.nivel_asignado || 'Nivel Básico';
+            }
+            cargarTodo();
+        });
+
+        async function cargarTodo() {
+            try {
+                if (TOKEN) {
+                    const resNotas = await fetch(`${API_URL}/modulos/mis-notas`, {
+                        headers: { 'Authorization': `Bearer ${TOKEN}` }
+                    });
+                    if (resNotas.ok) {
+                        const notesData = await resNotas.json();
+                        (notesData.progreso || []).forEach(p => misNotas[p.modulo_id] = p);
+                    }
+                }
+            } catch (e) { }
+
+            const r = await fetch(`${API_URL}/modulos/`);
+            const d = await r.json();
+            todosModulos = d.modulos || [];
+            
+            // Extract distinct subniveles for the assigned level
+            todosSubniveles = [...new Set(todosModulos.filter(m => m.nivel === nivelActual).map(m => m.subnivel))];
+            
+            const tabsContainer = document.getElementById('level-tabs-container');
+            if (tabsContainer && todosSubniveles.length > 0) {
+                tabsContainer.innerHTML = todosSubniveles.map((sn, i) => 
+                    `<button class="level-tab ${i===0 ? 'active' : ''}" onclick="setSubnivel('${sn}', this)">📚 ${sn}</button>`
+                ).join('');
+                
+                renderModulos(todosSubniveles[0]);
+            } else if (tabsContainer) {
+                tabsContainer.innerHTML = `<button class="level-tab active" style="cursor:default">🎯 ${nivelActual} (Sin Semestres)</button>`;
+                renderModulos(null);
+            }
+        }
+
+        function setSubnivel(subnivel, btn) {
+            document.querySelectorAll('.level-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderModulos(subnivel);
+        }
+
+        function renderModulos(subnivel) {
+            let lista = todosModulos.filter(m => m.nivel === nivelActual);
+            if (subnivel) {
+                lista = lista.filter(m => m.subnivel === subnivel);
+            }
+            
+            const cont = document.getElementById('modulos-list');
+            if(lista.length === 0) {
+                cont.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>No hay módulos para este semestre.</p></div>`;
+                return;
+            }
+
+            cont.innerHTML = lista.map((m, i) => {
+                const notaObj = misNotas[m.id];
+                const notaBadge = notaObj && notaObj.nota !== null
+                    ? `<span style="background:${notaObj.estado === 'aprobado' ? '#27ae60' : '#e67e22'};color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:10px;">Nota: ${notaObj.nota}</span>`
+                    : '';
+                return `
+        <div class="module-card" id="card-${m.id}">
+            <div class="module-card-header" onclick="toggleCard(${m.id})">
+                <h3 style="display:flex;align-items:center;">
+                    <span style="color:var(--blue);margin-right:.5rem;">Módulo ${i+1}:</span>
+                    ${m.nombre}
+                    ${notaBadge}
+                </h3>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="module-body">
+                <div class="topic-tabs">
+                    ${[1, 2, 3, 4].map(t => `<button class="topic-tab${t === 1 ? ' active' : ''}" onclick="setTopic(${m.id},${t},this)">Tema ${t}</button>`).join('')}
+                </div>
+                <div id="tc-${m.id}"><div class="empty-state"><div class="icon">📡</div><p>Cargando...</p></div></div>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        async function toggleCard(id) {
+            const card = document.getElementById(`card-${id}`);
+            card.classList.toggle('open');
+            if (card.classList.contains('open')) await loadTopicContent(id, 1);
+        }
+
+        async function loadTopicContent(modId, tema) {
+            if (!cacheContenidos[modId]) {
+                const r = await fetch(`${API_URL}/modulos/${modId}/contenidos`);
+                cacheContenidos[modId] = (await r.json()).contenidos || [];
+            }
+            renderTopicContent(modId, tema);
+        }
+
+        const MAT = { teoria: { icon: '📄', label: 'Teoría' }, presentacion: { icon: '📊', label: 'Presentación' }, audio: { icon: '🔊', label: 'Audio' }, video: { icon: '🎬', label: 'Video' }, evaluacion: { icon: '✅', label: 'Evaluación' } };
+        const ORDER = ['teoria', 'presentacion', 'audio', 'video', 'evaluacion'];
+
+        function renderTopicContent(modId, tema) {
+            const items = (cacheContenidos[modId] || []).filter(c => c.tema_num == tema);
+            items.sort((a, b) => {
+                const ia = ORDER.indexOf(a.tipo);
+                const ib = ORDER.indexOf(b.tipo);
+                return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+            });
+            const container = document.getElementById(`tc-${modId}`);
+            const withUrl = items.filter(c => c.url && c.url.trim());
+            if (!withUrl.length) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🔒</div><p>Material aún no disponible para este tema.</p></div>`;
+                return;
+            }
+            container.innerHTML = `<div class="materials">` +
+                items.map(c => c.url && c.url.trim()
+                    ? `<a href="${c.url}" target="_blank" class="mat-card">
+                <div class="mat-icon">${MAT[c.tipo]?.icon || '📎'}</div>
+                <div class="mat-label">${MAT[c.tipo]?.label || c.tipo}</div>
+               </a>`
+                    : `<div class="mat-card" style="cursor:default;opacity:.4">
+                <div class="mat-icon">${MAT[c.tipo]?.icon || '📎'}</div>
+                <div class="mat-label">${MAT[c.tipo]?.label || c.tipo}</div>
+                <div class="empty-mat">No disponible</div>
+               </div>`
+                ).join('') + `</div>`;
+        }
+
+        function setTopic(modId, tema, btn) {
+            document.querySelectorAll(`#card-${modId} .topic-tab`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            cacheContenidos[modId] ? renderTopicContent(modId, tema) : loadTopicContent(modId, tema);
+        }
+
+        function logout() { localStorage.clear(); window.location.href = '../index.html'; }
+    </script>
+</body>
+
+</html>

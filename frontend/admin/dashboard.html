@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Panel Administrador</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f0f4f8;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 20px;
+            border: 2px solid #2980b9;
+            background: white;
+            color: #2980b9;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn.active {
+            background: #2980b9;
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #eaf4fd;
+        }
+
+        .module-block {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+            overflow: hidden;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: #2980b9;
+            color: white;
+            cursor: pointer;
+        }
+
+        .module-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .module-header .badge {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, .25);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .module-body.open {
+            display: block;
+        }
+
+        .tema-tabs {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tema-tab {
+            padding: 0.35rem 0.9rem;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .tema-tab.active {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .material-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.85rem;
+            border: 1px solid #eee;
+        }
+
+        .material-item label {
+            font-size: 0.78rem;
+            color: #666;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .material-item input {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.82rem;
+        }
+
+        .material-item input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .tipo-icon {
+            margin-right: 4px;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82rem;
+            transition: all .2s;
+        }
+
+        .btn-save {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #27ae60;
+        }
+
+        .btn-rename {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-rename:hover {
+            background: #e67e22;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1b4f72;
+            margin: 2rem 0 0.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 3px solid #2980b9;
+        }
+
+        /* Profesor section */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row input,
+        .form-row select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        /* Inscritos table */
+        .inscritos-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .inscritos-table th {
+            background: #2980b9;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .inscritos-table td {
+            padding: 9px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .inscritos-table tr:hover td {
+            background: #f0f8ff;
+        }
+
+        @media(max-width:768px) {
+            .tab-bar {
+                gap: .3rem;
+            }
+
+            .tab-btn {
+                font-size: .8rem;
+                padding: .5rem 1rem;
+            }
+
+            .module-header h3 {
+                font-size: .9rem;
+            }
+
+            .material-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="EduConnect" class="logo-img">
+        </div>
+        <nav class="nav-links">
+            <span id="user-name" style="font-weight:700;">Administrador</span>
+            <a href="#" onclick="logout()" class="btn-login" style="background:#e74c3c;">Cerrar Sesión</a>
+        </nav>
+    </header>
+
+    <main style="padding:1.5rem;max-width:1100px;margin:auto;">
+
+        <!-- ── TABS DE NIVEL ─────────────────────────────────── -->
+        <div class="section-title">📚 Gestión de Módulos</div>
+        <div class="tab-bar" id="nivel-tabs">
+            <button class="tab-btn active" onclick="setNivel('Técnico Básico',this)">Técnico Básico</button>
+            <button class="tab-btn" onclick="setNivel('Técnico Auxiliar',this)">Técnico Auxiliar</button>
+            <button class="tab-btn" onclick="setNivel('Técnico Medio I',this)">Técnico Medio I</button>
+            <button class="tab-btn" onclick="setNivel('Técnico Medio II',this)">Técnico Medio II</button>
+        </div>
+
+        <button class="btn-login" style="margin-bottom:1rem;" onclick="crearModulo()">+ Nuevo Módulo</button>
+
+        <div id="modulos-container">
+            <p style="color:#999;text-align:center;padding:2rem;">Cargando...</p>
+        </div>
+
+        <!-- ── PROFESORES ──────────────────────── -->
+        <div class="section-title">👩‍🏫 Gestión de Profesores</div>
+        <div
+            style="background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:1rem;">
+            <div class="form-row">
+                <input id="prof-nombre" placeholder="Nombre *" />
+                <input id="prof-apellido" placeholder="Apellido *" />
+                <input id="prof-ci" placeholder="Carnet (Contraseña) *" />
+                <select id="prof-nivel">
+                    <option value="Técnico Básico">Técnico Básico</option>
+                    <option value="Técnico Auxiliar">Técnico Auxiliar</option>
+                    <option value="Técnico Medio I">Técnico Medio I</option>
+                    <option value="Técnico Medio II">Técnico Medio II</option>
+                </select>
+                <button class="btn-login" onclick="crearProfesor()">Registrar Profesor</button>
+            </div>
+            <div id="profesores-lista" style="margin-top:1rem;"></div>
+        </div>
+
+        <!-- ── INSCRIBIR ESTUDIANTE ──────────────── -->
+        <div class="section-title">🎓 Inscripción de Estudiantes</div>
+        <div
+            style="background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:1rem;">
+            <p style="color:#555;margin-bottom:1rem;font-size:.93rem;">
+                El administrador crea la cuenta del estudiante con su <strong>correo</strong> y
+                <strong>contraseña</strong> inicial.
+                El estudiante podrá cambiarla luego desde su perfil.
+            </p>
+            <div class="form-row">
+                <input id="est-nombre" placeholder="Nombre *" />
+                <input id="est-apellido" placeholder="Apellido *" />
+                <input id="est-ci" placeholder="Carnet (Contraseña) *" />
+                <select id="est-nivel">
+                    <option value="Técnico Básico">Técnico Básico</option>
+                    <option value="Técnico Auxiliar">Técnico Auxiliar</option>
+                    <option value="Técnico Medio I">Técnico Medio I</option>
+                    <option value="Técnico Medio II">Técnico Medio II</option>
+                </select>
+                <button class="btn-login" onclick="inscribirEstudiante()" style="background:#2ecc71;">
+                    ✅ Inscribir Estudiante
+                </button>
+            </div>
+            <div id="est-mensaje" style="margin-top:.8rem;font-size:.9rem;"></div>
+        </div>
+
+        <!-- ── LISTA DE ESTUDIANTES ───────────────── -->
+        <div class="section-title">👥 Estudiantes Registrados</div>
+        <div
+            style="background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow-x:auto;margin-bottom:1rem;">
+            <div id="estudiantes-container">
+                <em style="color:#999">Cargando lista de estudiantes…</em>
+            </div>
+        </div>
+
+        <!-- ── INSCRITOS / NOTAS ───────────────── -->
+        <div class="section-title">📊 Progreso y Notas</div>
+        <div
+            style="background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow-x:auto;">
+            <div id="inscritos-container"><em>Sin registros de progreso aún.</em></div>
+        </div>
+
+
+        <script src="../js/api.js"></script>
+        <script>
+            const TOKEN = localStorage.getItem('token');
+            let nivelActual = 'Técnico Básico';
+            let todosModulos = [];
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const u = JSON.parse(localStorage.getItem('user') || '{}');
+                if (u.nombre) document.getElementById('user-name').textContent = u.nombre + ' (Admin)';
+                cargarModulos(); cargarProfesores(); cargarInscritos(); cargarEstudiantes();
+            });
+
+            function setNivel(nivel, btn) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                nivelActual = nivel;
+                renderModulos();
+            }
+
+            async function cargarModulos() {
+                try {
+                    const r = await fetch(`${API_URL}/modulos/`);
+                    const d = await r.json();
+                    todosModulos = d.modulos || [];
+                    renderModulos();
+                } catch (e) { document.getElementById('modulos-container').innerHTML = '<p style="color:red">Error cargando módulos.</p>'; }
+            }
+
+            function renderModulos() {
+                const cont = document.getElementById('modulos-container');
+                const filtrados = todosModulos.filter(m => m.nivel === nivelActual);
+                if (!filtrados.length) { cont.innerHTML = '<p style="color:#999;text-align:center;padding:2rem;">Sin módulos para este nivel. Crea uno con el botón de arriba.</p>'; return; }
+                cont.innerHTML = filtrados.map(m => `
+        <div class="module-block" id="block-${m.id}">
+            <div class="module-header" onclick="toggleModule(${m.id})">
+                <h3>📘 ${m.nombre}</h3>
+                <span class="badge">#${m.orden || m.id} ▾</span>
+            </div>
+            <div class="module-body" id="body-${m.id}">
+                <div class="tema-tabs" id="tema-tabs-${m.id}">
+                    <button class="tema-tab active" onclick="setTema(${m.id},1,this)">Tema 1</button>
+                    <button class="tema-tab" onclick="setTema(${m.id},2,this)">Tema 2</button>
+                    <button class="tema-tab" onclick="setTema(${m.id},3,this)">Tema 3</button>
+                    <button class="tema-tab" onclick="setTema(${m.id},4,this)">Tema 4</button>
+                </div>
+                <div id="tema-content-${m.id}">Cargando...</div>
+                <div class="module-actions">
+                    <button class="btn-sm btn-save" onclick="guardarModulo(${m.id})">💾 Guardar URLs</button>
+                    <button class="btn-sm btn-rename" onclick="renombrarModulo(${m.id},'${m.nombre}', '${m.orden || 0}')">✏️ Editar</button>
+                    <button class="btn-sm btn-delete" onclick="eliminarModulo(${m.id})">🗑️ Eliminar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+            }
+
+            async function toggleModule(id) {
+                const body = document.getElementById(`body-${id}`);
+                body.classList.toggle('open');
+                if (body.classList.contains('open')) await cargarContenidosModulo(id, 1);
+            }
+
+            let contenidosPorModulo = {};
+
+            async function cargarContenidosModulo(modId, tema) {
+                if (!contenidosPorModulo[modId]) {
+                    const r = await fetch(`${API_URL}/modulos/${modId}/contenidos`);
+                    const d = await r.json();
+                    contenidosPorModulo[modId] = d.contenidos || [];
+                }
+                renderTema(modId, tema);
+            }
+
+            function setTema(modId, tema, btn) {
+                document.querySelectorAll(`#tema-tabs-${modId} .tema-tab`).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (!contenidosPorModulo[modId]) { cargarContenidosModulo(modId, tema); return; }
+                renderTema(modId, tema);
+            }
+
+            const ICONS = { teoria: '📄', presentacion: '📊', audio: '🔊', video: '🎬', evaluacion: '✅' };
+            const ORDER = ['teoria', 'presentacion', 'audio', 'video', 'evaluacion'];
+
+            function renderTema(modId, tema) {
+                const cont = document.getElementById(`tema-content-${modId}`);
+                const items = (contenidosPorModulo[modId] || []).filter(c => c.tema_num == tema);
+                items.sort((a, b) => {
+                    const ia = ORDER.indexOf(a.tipo);
+                    const ib = ORDER.indexOf(b.tipo);
+                    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+                });
+                if (!items.length) { cont.innerHTML = '<p style="color:#999">Sin materiales para este tema.</p>'; return; }
+                cont.innerHTML = `<div class="material-grid">` +
+                    items.map(c => `
+            <div class="material-item">
+                <label>${ICONS[c.tipo] || '📎'} ${c.tipo.toUpperCase()} <span style="float:right;cursor:pointer;color:#e74c3c;padding:0 5px;" onclick="eliminarMaterial(${c.id},${modId},${tema})" title="Eliminar material">✖</span></label>
+                <input type="text" id="cont-${c.id}" value="${c.url || ''}" placeholder="Pega el enlace aquí...">
+            </div>`).join('') + `
+            <div class="material-item" style="display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px dashed #bbb;background:transparent;min-height:80px;" onclick="addMaterial(${modId}, ${tema})">
+                <span style="color:#666;font-weight:700;font-size:.9rem;">➕ Agregar</span>
+            </div>
+            </div>`;
+            }
+
+            async function guardarModulo(modId) {
+                const items = contenidosPorModulo[modId] || [];
+                let ok = 0;
+                for (const c of items) {
+                    const el = document.getElementById(`cont-${c.id}`);
+                    if (!el) continue;
+                    const r = await fetch(`${API_URL}/modulos/contenidos/${c.id}?url=${encodeURIComponent(el.value)}`, {
+                        method: 'PUT', headers: { Authorization: `Bearer ${TOKEN}` }
+                    });
+                    if (r.ok) ok++;
+                }
+                alert(`✅ ${ok} materiales guardados correctamente.`);
+            }
+
+            async function eliminarMaterial(id, modId, tema) {
+                if (!confirm('¿Seguro que deseas eliminar este material permanentemente?')) return;
+                try {
+                    const r = await fetch(`${API_URL}/modulos/contenidos/${id}`, {
+                        method: 'DELETE', headers: { Authorization: `Bearer ${TOKEN}` }
+                    });
+                    if (r.ok) {
+                        delete contenidosPorModulo[modId];
+                        await cargarContenidosModulo(modId, tema);
+                    } else alert('Error al eliminar');
+                } catch (e) { alert('Error de conexión'); }
+            }
+
+            async function addMaterial(modId, tema) {
+                const tipo = prompt("Ingresa el tipo de material (ej. Extra, Documento, PDF):");
+                if (!tipo) return;
+                const titulo = prompt("Título para este material:", tipo.toUpperCase());
+                if (!titulo) return;
+                const url = prompt("Puedes pegar el enlace ahora o dejarlo vacío y guardarlo después:");
+
+                const params = new URLSearchParams({ tipo, titulo, url: url || '', tema_num: tema });
+                await fetch(`${API_URL}/modulos/${modId}/contenidos?${params.toString()}`, {
+                    method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }
+                });
+                delete contenidosPorModulo[modId];
+                await cargarContenidosModulo(modId, tema);
+            }
+
+            async function renombrarModulo(id, actualNombre, actualOrden) {
+                const nuevoNombre = prompt('Nuevo nombre para el módulo:', actualNombre);
+                if (nuevoNombre === null) return; // cancelado
+                const nuevoOrdenStr = prompt('Nuevo número (orden) para el módulo:', actualOrden);
+                if (nuevoOrdenStr === null) return; // cancelado
+
+                const params = new URLSearchParams();
+                if (nuevoNombre && nuevoNombre !== actualNombre) params.append('nombre', nuevoNombre);
+                if (nuevoOrdenStr && nuevoOrdenStr !== actualOrden) params.append('orden', parseInt(nuevoOrdenStr));
+
+                if (params.toString() === '') return;
+
+                await fetch(`${API_URL}/modulos/${id}?${params.toString()}`, {
+                    method: 'PUT', headers: { Authorization: `Bearer ${TOKEN}` }
+                });
+                await cargarModulos();
+            }
+
+            async function eliminarModulo(id) {
+                if (!confirm('¿Seguro que deseas eliminar este módulo y todo su contenido?')) return;
+                await fetch(`${API_URL}/modulos/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${TOKEN}` } });
+                await cargarModulos();
+            }
+
+            async function crearModulo() {
+                const nombre = prompt(`Nombre del nuevo módulo para ${nivelActual}:`);
+                if (!nombre) return;
+                await fetch(`${API_URL}/modulos/?nombre=${encodeURIComponent(nombre)}&nivel=${encodeURIComponent(nivelActual)}`, {
+                    method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }
+                });
+                alert('✅ Módulo creado con 4 temas.');
+                await cargarModulos();
+            }
+
+            async function crearProfesor() {
+                const nombre = document.getElementById('prof-nombre').value.trim();
+                const apellido = document.getElementById('prof-apellido').value.trim();
+                const ci = document.getElementById('prof-ci').value.trim();
+                const nivel_asignado = document.getElementById('prof-nivel').value;
+
+                if (!nombre || !apellido || !ci) { alert('Completa nombre, apellido y carnet.'); return; }
+
+                const email = `${nombre.toLowerCase()}.${apellido.toLowerCase()}@educonnect.com`.replace(/\s+/g, '');
+                const password = ci;
+
+                const r = await fetch(`${API_URL}/auth/register-profesor?nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&nivel_asignado=${encodeURIComponent(nivel_asignado)}`, {
+                    method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }
+                });
+                const d = await r.json();
+                if (r.ok) {
+                    alert(`✅ ${d.mensaje}\n✉️ Email generado: ${email}`);
+                    ['prof-nombre', 'prof-apellido', 'prof-ci'].forEach(id => document.getElementById(id).value = '');
+                    cargarProfesores();
+                } else alert(`❌ ${d.detail}`);
+            }
+
+            async function restablecerPassword(userId) {
+                const newPass = prompt("Ingresa el Carnet o la nueva contraseña:");
+                if (!newPass) return;
+                try {
+                    const r = await fetch(`${API_URL}/auth/usuarios/${userId}/password`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
+                        body: JSON.stringify({ new_password: newPass })
+                    });
+                    const d = await r.json();
+                    if (r.ok) alert('✅ Contraseña restablecida.');
+                    else alert(`❌ Error: ${d.detail}`);
+                } catch (e) { alert('❌ Error de conexión.'); }
+            }
+
+            async function cargarProfesores() {
+                try {
+                    const r = await fetch(`${API_URL}/auth/profesores`);
+                    const d = await r.json();
+                    const lista = d.profesores || [];
+                    document.getElementById('profesores-lista').innerHTML = lista.length
+                        ? `<table class="inscritos-table"><tr><th>Nombre</th><th>Email</th><th>Nivel Asignado</th><th>Acciones</th></tr>
+               ${lista.map(p => `<tr>
+                    <td>${p.nombre} ${p.apellido}</td>
+                    <td>${p.email}</td>
+                    <td><span class="badge" style="background:#2980b9;color:white;padding:2px 10px;border-radius:20px">${p.nivel_asignado}</span></td>
+                    <td>
+                        <button class="btn-sm btn-rename" onclick="restablecerPassword(${p.id})">🔑 Clave</button>
+                        <button class="btn-sm btn-delete" onclick="eliminarUsuario(${p.id}, 'profesor')">🗑️ Baja</button>
+                    </td>
+                </tr>`).join('')}
+               </table>`
+                        : '<em style="color:#999">No hay profesores registrados aún.</em>';
+                } catch (e) { }
+            }
+
+            async function cargarInscritos() {
+                try {
+                    const r = await fetch(`${API_URL}/modulos/admin/inscritos`);
+                    const d = await r.json();
+                    const list = d.inscritos || [];
+                    document.getElementById('inscritos-container').innerHTML = list.length
+                        ? `<table class="inscritos-table">
+                <tr><th>Estudiante</th><th>Email</th><th>Nivel</th><th>Módulo</th><th>Estado</th><th>Nota</th><th>Acciones</th></tr>
+                ${list.map(i => `<tr>
+                    <td><strong>${i.nombre}</strong></td>
+                    <td>${i.email}</td>
+                    <td>${i.nivel}</td>
+                    <td>${i.modulo}</td>
+                    <td><span style="color:${i.estado === 'aprobado' ? '#27ae60' : '#e67e22'}">${i.estado}</span></td>
+                    <td><strong>${i.nota !== null ? i.nota : '—'}</strong></td>
+                    <td>
+                        <button class="btn-sm btn-rename" onclick="asignarNota(${i.progreso_id})">📝 Nota</button>
+                        <button class="btn-sm btn-delete" onclick="eliminarUsuario(${i.id}, 'estudiante')">🗑️</button>
+                    </td>
+                </tr>`).join('')}
+               </table>`
+                        : '<em style="color:#999">Sin progreso registrado todavía.</em>';
+                } catch (e) { }
+            }
+
+
+            async function asignarNota(progresoId) {
+                const notaStr = prompt('Ingresa la nota final del módulo (0 - 100):');
+                if (!notaStr) return;
+                const nota = parseFloat(notaStr);
+                if (isNaN(nota) || nota < 0 || nota > 100) { alert('Nota inválida. Debe ser un número entre 0 y 100.'); return; }
+
+                try {
+                    const r = await fetch(`${API_URL}/modulos/admin/inscritos/${progresoId}/nota?nota=${nota}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${TOKEN}` }
+                    });
+                    if (r.ok) {
+                        alert('✅ Nota asignada correctamente');
+                        cargarInscritos();
+                    } else alert('❌ Error asignando la nota');
+                } catch (e) { alert('❌ Error de conexión al servidor'); }
+            }
+
+            // ── INSCRIBIR NUEVO ESTUDIANTE ──────────────────────────────
+            async function inscribirEstudiante() {
+                const nombre = document.getElementById('est-nombre').value.trim();
+                const apellido = document.getElementById('est-apellido').value.trim();
+                const ci = document.getElementById('est-ci').value.trim();
+                const nivel = document.getElementById('est-nivel').value;
+                const msg = document.getElementById('est-mensaje');
+
+                if (!nombre || !apellido || !ci) {
+                    msg.innerHTML = '<span style="color:#e74c3c">⚠️ Nombre, apellido y carnet son obligatorios.</span>';
+                    return;
+                }
+
+                const email = `${nombre.toLowerCase()}.${apellido.toLowerCase()}@educonnect.com`.replace(/\s+/g, '');
+                const password = ci;
+                msg.innerHTML = '<span style="color:#f39c12">⏳ Inscribiendo estudiante…</span>';
+
+                try {
+                    const r = await fetch(`${API_URL}/auth/register-estudiante`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${TOKEN}`
+                        },
+                        body: JSON.stringify({ nombre, apellido, email, password, nivel_asignado: nivel })
+                    });
+                    const d = await r.json();
+                    if (r.ok) {
+                        msg.innerHTML = `<span style="color:#27ae60">✅ ${d.mensaje}<br>
+                            📧 Correo autogenerado: <strong>${d.email}</strong><br>
+                            🔑 Contraseña inicial: <strong>${password}</strong></span>`;
+                        ['est-nombre', 'est-apellido', 'est-ci'].forEach(id => document.getElementById(id).value = '');
+                        cargarEstudiantes();
+                    } else {
+                        msg.innerHTML = `<span style="color:#e74c3c">❌ ${d.detail}</span>`;
+                    }
+                } catch (e) {
+                    msg.innerHTML = '<span style="color:#e74c3c">❌ Error de conexión al servidor.</span>';
+                }
+            }
+
+            // ── CARGAR LISTA DE ESTUDIANTES ─────────────────────────────
+            async function cargarEstudiantes() {
+                try {
+                    const r = await fetch(`${API_URL}/auth/estudiantes`, {
+                        headers: { 'Authorization': `Bearer ${TOKEN}` }
+                    });
+                    const d = await r.json();
+                    const lista = d.estudiantes || [];
+                    document.getElementById('estudiantes-container').innerHTML = lista.length
+                        ? `<table class="inscritos-table">
+                            <tr>
+                                <th>Nombre</th><th>Apellido</th>
+                                <th>Correo Institucional</th>
+                                <th>Nivel Asignado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            ${lista.map(e => `<tr>
+                                <td><strong>${e.nombre}</strong></td>
+                                <td>${e.apellido || '—'}</td>
+                                <td>${e.email}</td>
+                                <td><span class="badge" style="background:#27ae60;color:white;padding:2px 10px;border-radius:20px">${e.nivel_asignado || 'Sin nivel'}</span></td>
+                                <td>
+                                    <button class="btn-sm btn-rename" onclick="restablecerPassword(${e.id})">🔑 Clave</button>
+                                    <button class="btn-sm btn-delete" onclick="eliminarUsuario(${e.id},'estudiante')">🗑️ Baja</button>
+                                </td>
+                            </tr>`).join('')}
+                          </table>`
+                        : '<em style="color:#999">No hay estudiantes registrados aún. ¡Inscribe el primero!</em>';
+                } catch (e) {
+                    document.getElementById('estudiantes-container').innerHTML =
+                        '<em style="color:#e74c3c">Error cargando estudiantes.</em>';
+                }
+            }
+
+            async function eliminarUsuario(userId, tipo) {
+                if (!confirm(`¿Estás seguro de que deseas eliminar este ${tipo}? Esta acción no se puede deshacer.`)) return;
+                try {
+                    const r = await fetch(`${API_URL}/auth/usuarios/${userId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${TOKEN}` }
+                    });
+                    if (r.ok) {
+                        alert('✅ Usuario eliminado correctamente.');
+                        if (tipo === 'profesor') cargarProfesores();
+                        else { cargarEstudiantes(); cargarInscritos(); }
+                    } else {
+                        const d = await r.json();
+                        alert(`❌ Error: ${d.detail || 'No se pudo eliminar el usuario'}`);
+                    }
+                } catch (e) {
+                    alert('❌ Error de conexión al servidor.');
+                }
+            }
+
+            function logout() {
+                localStorage.removeItem('token'); localStorage.removeItem('user');
+                window.location.href = '../index.html';
+            }
+        </script>
+</body>
+
+</html>

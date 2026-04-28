@@ -1,0 +1,41 @@
+services:
+  # 1. PostgreSQL Database
+  - type: psqldb
+    name: educonnect-db
+    plan: free
+    region: ohio
+
+  # 2. Backend Service (FastAPI)
+  - type: web
+    name: educonnect-backend
+    env: python
+    region: ohio
+    plan: free
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: educonnect-db
+          property: connectionString
+      - key: INTERNAL_DATABASE_URL
+        fromDatabase:
+          name: educonnect-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+
+  # 3. Frontend Static Site
+  - type: web
+    name: educonnect-frontend
+    env: static
+    region: ohio
+    plan: free
+    buildCommand: ""
+    staticPublishPath: "./frontend"
+    envVars:
+      - key: VITE_API_URL # En caso de usar VITE o vars estáticas, aunque aquí usamos Vainilla JS
+        fromService:
+          name: educonnect-backend
+          type: web
+          property: hostport

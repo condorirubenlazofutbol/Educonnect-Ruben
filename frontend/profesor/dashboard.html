@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Panel Profesor</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f0f4f8;
+        }
+
+        .nivel-badge {
+            background: #2980b9;
+            color: white;
+            padding: 4px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .module-block {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+            overflow: hidden;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #2980b9, #1b4f72);
+            color: white;
+            cursor: pointer;
+        }
+
+        .module-header h3 {
+            font-size: .95rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .module-body.open {
+            display: block;
+        }
+
+        .tema-tabs {
+            display: flex;
+            gap: .4rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tema-tab {
+            padding: .35rem .9rem;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+
+        .tema-tab.active {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: .75rem;
+        }
+
+        .material-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: .85rem;
+            border: 1px solid #eee;
+        }
+
+        .material-item label {
+            font-size: .78rem;
+            color: #666;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .material-item input {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: .4rem .6rem;
+            font-size: .82rem;
+        }
+
+        .material-item input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .btn-sm {
+            padding: .4rem 1rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .82rem;
+        }
+
+        .btn-save {
+            background: #2ecc71;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="EduConnect" class="logo-img">
+        </div>
+        <nav class="nav-links">
+            <span id="user-name">Profesor</span>
+            <span class="nivel-badge" id="nivel-badge">—</span>
+            <a href="#" onclick="logout()" class="btn-login" style="background:#e74c3c;">Salir</a>
+        </nav>
+    </header>
+
+    <main style="padding:1.5rem;max-width:1000px;margin:auto;">
+        <h2 style="color:#1b4f72;margin-bottom:1rem;">📘 Módulos de mi Nivel</h2>
+        <div id="modulos-container">
+            <p style="color:#999;text-align:center;padding:2rem;">Cargando módulos...</p>
+        </div>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script>
+        const TOKEN = localStorage.getItem('token');
+        let contenidosPorModulo = {};
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const u = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!u || u.rol !== 'profesor') { alert('Acceso denegado.'); window.location.href = '../index.html'; return; }
+            document.getElementById('user-name').textContent = u.nombre;
+            document.getElementById('nivel-badge').textContent = u.nivel_asignado || '';
+            await cargarModulos(u.nivel_asignado);
+        });
+
+        async function cargarModulos(nivel) {
+            const r = await fetch(`${API_URL}/modulos/nivel/${encodeURIComponent(nivel)}`);
+            const d = await r.json();
+            const modulos = d.modulos || [];
+            const cont = document.getElementById('modulos-container');
+            if (!modulos.length) { cont.innerHTML = '<p style="text-align:center;color:#999;">No hay módulos para tu nivel aún.</p>'; return; }
+            cont.innerHTML = modulos.map(m => `
+        <div class="module-block">
+            <div class="module-header" onclick="toggle(${m.id})">
+                <h3 style="display:flex;align-items:center;">
+                   <span style="color:#FFF;background:rgba(0,0,0,0.2);padding:2px 8px;border-radius:12px;margin-right:.6rem;font-size:0.85rem;">#${m.orden || m.id}</span>
+                   ${m.nombre}
+                </h3>
+                <span>▾</span>
+            </div>
+            <div class="module-body" id="body-${m.id}">
+                <div class="tema-tabs">
+                    ${[1, 2, 3, 4].map(t => `<button class="tema-tab${t === 1 ? ' active' : ''}" onclick="setTema(${m.id},${t},this)">Tema ${t}</button>`).join('')}
+                </div>
+                <div id="tema-content-${m.id}">Cargando...</div>
+                <div style="margin-top:1rem;">
+                    <button class="btn-sm btn-save" onclick="guardar(${m.id})">💾 Guardar</button>
+                </div>
+            </div>
+        </div>`).join('');
+        }
+
+        async function toggle(id) {
+            const body = document.getElementById(`body-${id}`);
+            body.classList.toggle('open');
+            if (body.classList.contains('open')) await loadContenidos(id, 1);
+        }
+
+        async function loadContenidos(modId, tema) {
+            if (!contenidosPorModulo[modId]) {
+                const r = await fetch(`${API_URL}/modulos/${modId}/contenidos`);
+                contenidosPorModulo[modId] = (await r.json()).contenidos || [];
+            }
+            renderTema(modId, tema);
+        }
+
+        const ICONS = { teoria: '📄', presentacion: '📊', audio: '🔊', video: '🎬', evaluacion: '✅' };
+        const ORDER = ['teoria', 'presentacion', 'audio', 'video', 'evaluacion'];
+
+        function renderTema(modId, tema) {
+            const items = (contenidosPorModulo[modId] || []).filter(c => c.tema_num == tema);
+            items.sort((a, b) => {
+                const ia = ORDER.indexOf(a.tipo);
+                const ib = ORDER.indexOf(b.tipo);
+                return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+            });
+            document.getElementById(`tema-content-${modId}`).innerHTML = `<div class="material-grid">` +
+                items.map(c => `<div class="material-item"><label>${ICONS[c.tipo] || '📎'} ${c.tipo.toUpperCase()} <span style="float:right;cursor:pointer;color:#e74c3c;padding:0 5px;" onclick="eliminarMaterial(${c.id},${modId},${tema})" title="Eliminar material">✖</span></label>
+            <input id="cont-${c.id}" value="${c.url || ''}" placeholder="Enlace..."></div>`).join('') + `
+            <div class="material-item" style="display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px dashed #bbb;background:transparent;min-height:80px;" onclick="addMaterial(${modId}, ${tema})">
+                <span style="color:#666;font-weight:700;font-size:.9rem;">➕ Agregar</span>
+            </div>
+            </div>`;
+        }
+
+        function setTema(modId, tema, btn) {
+            document.querySelectorAll(`#body-${modId} .tema-tab`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            contenidosPorModulo[modId] ? renderTema(modId, tema) : loadContenidos(modId, tema);
+        }
+
+        async function guardar(modId) {
+            const items = contenidosPorModulo[modId] || [];
+            let ok = 0;
+            for (const c of items) {
+                const el = document.getElementById(`cont-${c.id}`);
+                if (el && el.value !== c.url) {
+                    await fetch(`${API_URL}/modulos/contenidos/${c.id}?url=${encodeURIComponent(el.value)}`,
+                        { method: 'PUT', headers: { Authorization: `Bearer ${TOKEN}` } });
+                    ok++;
+                }
+            }
+            if (ok > 0) alert(`✅ ${ok} materiales guardados correctamente.`);
+            else alert('No hay cambios para guardar.');
+        }
+
+        async function addMaterial(modId, tema) {
+            const tipo = prompt("Ingresa el tipo de material (ej. Extra, Documento, PDF):");
+            if (!tipo) return;
+            const titulo = prompt("Título para este material:", tipo.toUpperCase());
+            if (!titulo) return;
+            const url = prompt("Puedes pegar el enlace ahora o dejarlo vacío y guardarlo después:");
+
+            const params = new URLSearchParams({ tipo, titulo, url: url || '', tema_num: tema });
+            await fetch(`${API_URL}/modulos/${modId}/contenidos?${params.toString()}`, {
+                method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }
+            });
+            delete contenidosPorModulo[modId];
+            await loadContenidos(modId, tema);
+        }
+
+        async function eliminarMaterial(id, modId, tema) {
+            if (!confirm('¿Seguro que deseas eliminar este material permanentemente?')) return;
+            try {
+                const r = await fetch(`${API_URL}/modulos/contenidos/${id}`, {
+                    method: 'DELETE', headers: { Authorization: `Bearer ${TOKEN}` }
+                });
+                if (r.ok) {
+                    delete contenidosPorModulo[modId];
+                    await loadContenidos(modId, tema);
+                } else alert('Error al eliminar');
+            } catch (e) { alert('Error de conexión'); }
+        }
+
+        function logout() { localStorage.clear(); window.location.href = '../index.html'; }
+    </script>
+</body>
+
+</html>
