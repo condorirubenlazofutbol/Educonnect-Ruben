@@ -112,12 +112,22 @@ async function loadModulos() {
   try {
     const r = await fetch(API_URL + '/modulos/');
     const d = await r.json();
+    
+    // Normalizar el nivel asignado
+    let myNivel = NIVEL.toLowerCase().trim();
+    let baseNivel = myNivel.split(' - ')[0].trim();
+    let subNivel = myNivel.includes(' - ') ? myNivel.split(' - ')[1].trim() : null;
+
     let mods = (d.modulos || []).filter(m => {
-      if (NIVEL.includes(' - ')) {
-        const parts = NIVEL.split(' - ');
-        return m.nivel === parts[0] && (m.subnivel || '').includes(parts[1]);
+      let mNiv = m.nivel.toLowerCase().trim();
+      let mSub = (m.subnivel || '').toLowerCase().trim();
+      
+      if (subNivel) {
+        // Ejemplo: "Medio - M1" coincide con nivel="medio" y subnivel contiene "m1"
+        return mNiv === baseNivel && mSub.includes(subNivel);
       }
-      return m.nivel === NIVEL;
+      // Ejemplo: "Básico" coincide con nivel="básico"
+      return mNiv === baseNivel;
     });
 
     if (!mods.length) {
@@ -135,7 +145,7 @@ async function loadModulos() {
           <span style="font-size:0.8rem;color:var(--m)">▼</span>
         </div>
         <div class="mod-body">
-          ${[1,2,3,4].map(t => `
+          ${[1,2,3,4,5].map(t => `
             <div class="topic-box">
               <div class="topic-header"><span class="tnum">TEMA ${t}</span> Gestión de Contenidos</div>
               <div class="materials-grid">
@@ -170,7 +180,7 @@ async function loadContenidos(modId) {
     const r = await fetch(API_URL + '/modulos/' + modId + '/contenidos');
     const d = await r.json();
     const items = (d.contenidos || []).filter(c => c.url);
-    for (let t = 1; t <= 4; t++) {
+    for (let t = 1; t <= 5; t++) {
       const el = document.getElementById(`list-${modId}-${t}`);
       if (!el) continue;
       const tItems = items.filter(c => c.tema_num === t);
