@@ -13,110 +13,119 @@ def seed_data():
         )
         cursor = connection.cursor()
 
-        # Limpiamos modulos existentes para asegurar la nueva malla
+        # ── Crear usuarios por defecto ─────────────────────────────────────────
+        import sys, os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import security as auth
+
+        usuarios_default = [
+            ("Admin",     "EduConnect", "admin@educonnect.com",    "Admin2026!",    "administrador", None),
+            ("Profesor",  "Demo",       "profesor@educonnect.com", "Profesor2026!", "profesor",      "Básico"),
+            ("Estudiante","Demo",       "estudiante@educonnect.com","Estud2026!",   "estudiante",    "Básico"),
+        ]
+
+        for nombre, apellido, email, password, rol, nivel in usuarios_default:
+            cursor.execute("SELECT id FROM usuarios WHERE email=%s", (email,))
+            if not cursor.fetchone():
+                hashed = auth.get_password_hash(password)
+                cursor.execute(
+                    "INSERT INTO usuarios (nombre, apellido, email, password, rol, nivel_asignado) VALUES (%s,%s,%s,%s,%s,%s)",
+                    (nombre, apellido, email, hashed, rol, nivel)
+                )
+                print(f"Usuario creado: {email} ({rol})")
+            else:
+                print(f"Usuario ya existe: {email}")
+
+        # ── Limpiar e insertar malla curricular ────────────────────────────────
         cursor.execute("DELETE FROM modulos")
 
         MALLA = [
             # I. NIVEL BÁSICO
-            ("1er SEMESTRE - BÁSICO", "Nivel Básico", [
-                "Módulo 1: Introducción a la Informática",
-                "Módulo 2: Pensamiento Computacional",
-                "Módulo 3: Lógica de Programación I",
-                "Módulo 4: Algoritmos I",
-                "Módulo 5: Módulo Emergente I (IA básica)"
+            ("1er SEMESTRE - BÁSICO", "Básico", [
+                "Introducción a la Informática",
+                "Pensamiento Computacional",
+                "Lógica de Programación I",
+                "Algoritmos I",
+                "Ofimática Básica"
             ]),
-            ("2do SEMESTRE - AUXILIAR", "Nivel Básico", [
-                "Módulo 1: Lógica de Programación II",
-                "Módulo 2: Estructuras de Control",
-                "Módulo 3: Funciones",
-                "Módulo 4: Bases de Datos Básicas",
-                "Módulo 5: Módulo Emergente II (Prompts básicos)"
+            ("2do SEMESTRE - AUXILIAR", "Auxiliar", [
+                "Sistemas Operativos",
+                "Programación Básica",
+                "Hardware Esencial",
+                "Redes Locales",
+                "Base de Datos Básica"
             ]),
             # II. NIVEL MEDIO
-            ("3er SEMESTRE - MEDIO I", "Nivel Medio", [
-                "Módulo 1: Programación con Python",
-                "Módulo 2: Estructuras de Datos",
-                "Módulo 3: Bases de Datos I",
-                "Módulo 4: Sistemas Operativos y Redes",
-                "Módulo 5: Módulo Emergente III (Prompt estructurado)"
+            ("3er SEMESTRE - MEDIO I", "Medio", [
+                "Programación Intermedia",
+                "Diseño Web I",
+                "Base de Datos Intermedia",
+                "Inglés Técnico I",
+                "Emprendimiento Digital"
             ]),
-            ("4to SEMESTRE - MEDIO II", "Nivel Medio", [
-                "Módulo 1: Frontend",
-                "Módulo 2: Backend Básico",
-                "Módulo 3: Base de Datos II",
-                "Módulo 4: Control de Versiones",
-                "Módulo 5: Módulo Emergente IV (Contexto IA)"
+            ("4to SEMESTRE - MEDIO II", "Medio", [
+                "Programación Web",
+                "Diseño Web II",
+                "Redes Intermedias",
+                "Programación Móvil I",
+                "Proyecto Integrador I"
             ]),
             # III. NIVEL SUPERIOR
-            ("5to SEMESTRE - SUPERIOR I", "Nivel Superior", [
-                "Módulo 1: Frontend Avanzado",
-                "Módulo 2: Backend Avanzado",
-                "Módulo 3: Arquitectura de Software",
-                "Módulo 4: Seguridad Informática",
-                "Módulo 5: Módulo Emergente V (SDD)"
+            ("5to SEMESTRE - SUPERIOR I", "Superior", [
+                "Arquitectura de Software",
+                "Bases de Datos Avanzadas",
+                "DevOps & Cloud",
+                "Seguridad Informática",
+                "Inglés Técnico II"
             ]),
-            ("6to SEMESTRE - SUPERIOR II", "Nivel Superior", [
-                "Módulo 1: DevOps Básico",
-                "Módulo 2: Testing de Software",
-                "Módulo 3: Despliegue",
-                "Módulo 4: Gestión de Proyectos",
-                "Módulo 5: Módulo Emergente VI (Flujo con IA)"
+            ("6to SEMESTRE - SUPERIOR II", "Superior", [
+                "Inteligencia Artificial",
+                "Desarrollo Full Stack",
+                "Gestión de Proyectos TI",
+                "Programación Móvil II",
+                "Proyecto Integrador II"
             ]),
             # IV. NIVEL INGENIERÍA
-            ("7mo SEMESTRE - INGENIERÍA I", "Nivel Ingeniería", [
-                "Módulo 1: Estructuras de Datos Avanzadas",
-                "Módulo 2: Algoritmos",
-                "Módulo 3: Complejidad Computacional",
-                "Módulo 4: Bases de Datos Avanzadas",
-                "Módulo 5: Módulo Emergente VII (Validación IA)"
+            ("7mo SEMESTRE - INGENIERÍA I", "Ingeniería", [
+                "Fundamentos de Ing. de Software",
+                "Matemáticas Discretas",
+                "Arquitecturas de Computadoras",
+                "Cálculo para Ingeniería"
             ]),
-            ("8vo SEMESTRE - INGENIERÍA II", "Nivel Ingeniería", [
-                "Módulo 1: Arquitectura Avanzada",
-                "Módulo 2: Cloud Computing",
-                "Módulo 3: Infraestructura",
-                "Módulo 4: Seguridad Avanzada",
-                "Módulo 5: Módulo Emergente VIII (Automatización IA)"
+            ("8vo SEMESTRE - INGENIERÍA II", "Ingeniería", [
+                "Estructuras de Datos",
+                "Sistemas Operativos Avanzados",
+                "Compiladores",
+                "Redes Avanzadas"
             ]),
-            ("9no SEMESTRE - INGENIERÍA III", "Nivel Ingeniería", [
-                "Módulo 1: IA en Desarrollo",
-                "Módulo 2: Spec-Driven Development (SDD)",
-                "Módulo 3: Ingeniería de Prompts",
-                "Módulo 4: Automatización Avanzada",
-                "Módulo 5: Módulo Emergente IX (Ética IA)"
+            ("9no SEMESTRE - INGENIERÍA III", "Ingeniería", [
+                "Ingeniería de Datos",
+                "Machine Learning Avanzado",
+                "Ciberseguridad Avanzada",
+                "Sistemas Distribuidos"
             ]),
-            ("10mo SEMESTRE - INGENIERÍA IV", "Nivel Ingeniería", [
-                "Módulo 1: Proyecto de Grado",
-                "Módulo 2: Documentación Técnica",
-                "Módulo 3: Emprendimiento Tecnológico",
-                "Módulo 4: Inserción Laboral",
-                "Módulo 5: Módulo Emergente X (IA aplicada)"
+            ("10mo SEMESTRE - INGENIERÍA IV", "Ingeniería", [
+                "Proyecto de Grado I",
+                "Proyecto de Grado II",
+                "Innovación y Tecnología",
+                "Liderazgo y Gestión TI"
             ])
         ]
 
-        # Insertar modulos
         orden_general = 1
         for subnivel, nivel, modulos_nombres in MALLA:
-            for m_idx, m_nombre in enumerate(modulos_nombres):
+            for m_nombre in modulos_nombres:
                 cursor.execute(
                     "INSERT INTO modulos (nombre, nivel, subnivel, orden) VALUES (%s, %s, %s, %s) RETURNING id",
                     (m_nombre, nivel, subnivel, orden_general)
                 )
                 m_id = cursor.fetchone()[0]
                 orden_general += 1
-
-                # Para cada módulo, creamos 4 temas teóricos (el prompt original pasaba 4 temas por módulo)
-                # Aquí simplemente insertamos 4 temas base (se pueden editar luego en el panel)
                 for tema_num in range(1, 5):
                     cursor.execute(
                         "INSERT INTO contenidos (modulo_id, tipo, titulo, url, tema_num) VALUES (%s,%s,%s,%s,%s)",
                         (m_id, "teoria", f"Tema {tema_num}", "", tema_num)
                     )
-                    # Insertamos también recursos multimedia para tener la estructura "Pro"
-                    for tipo_recurso in ["video", "evaluacion"]:
-                        cursor.execute(
-                            "INSERT INTO contenidos (modulo_id, tipo, titulo, url, tema_num) VALUES (%s,%s,%s,%s,%s)",
-                            (m_id, tipo_recurso, f"Recurso {tema_num} - {tipo_recurso.capitalize()}", "", tema_num)
-                        )
 
         connection.commit()
         return orden_general - 1 # Retorna la cantidad de módulos creados
